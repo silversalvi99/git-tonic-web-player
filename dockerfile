@@ -1,5 +1,4 @@
-
-FROM node:22-alpine AS build
+FROM --platform=$BUILDPLATFORM node:22-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
@@ -7,16 +6,14 @@ RUN npm install
 
 COPY . .
 
-RUN npx ng build --configuration production
+RUN npx ng build --configuration production --base-href /player/
 
 FROM nginx:alpine
 
 RUN rm /etc/nginx/conf.d/default.conf
-
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY --from=build /app/dist/gin-tonic-player/browser /usr/share/nginx/html
+COPY --from=build /app/dist/gin-tonic-web-player/browser /usr/share/nginx/html
 
 EXPOSE 80
-
 CMD ["nginx", "-g", "daemon off;"]

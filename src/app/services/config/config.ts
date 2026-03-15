@@ -9,6 +9,6 @@ import { NavidromeConfig } from '../../models/navidrome-config.model';
 export class Config {
   /** Navidrome config resource */
   public readonly navidromeConfigResource = httpResource<NavidromeConfig>(
-    () => '/assets/config.json',
+    () => 'assets/config.json',
   );
 }
