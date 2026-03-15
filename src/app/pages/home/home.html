@@ -1,0 +1,17 @@
+<div class="h-screen flex flex-col md:flex-row bg-black text-white overflow-hidden font-sans">
+  <aside class="hidden md:flex w-64 bg-zinc-950 border-r border-zinc-900">
+    <app-sidebar></app-sidebar>
+  </aside>
+
+  <div class="flex-grow flex flex-col relative">
+    <main class="flex-grow overflow-y-auto p-6 md:p-10 pb-32">
+      <section>
+        <h1 class="text-4xl font-extrabold tracking-tighter mb-8">Scopri</h1>
+        <app-tracks-list></app-tracks-list>
+      </section>
+    </main>
+
+    <app-player></app-player>
+    <app-tabs></app-tabs>
+  </div>
+</div>

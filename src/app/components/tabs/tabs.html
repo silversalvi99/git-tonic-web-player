@@ -1,0 +1,23 @@
+<nav
+  class="flex justify-around items-center h-16 bg-zinc-950/80 backdrop-blur-lg border-t border-zinc-900 px-4"
+>
+  @for (item of menuItems(); track item.route) {
+    <a
+      [routerLink]="item.route"
+      routerLinkActive="text-white"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="flex flex-col items-center justify-center space-y-1 group w-full text-zinc-500 transition-colors"
+    >
+      <ng-icon [name]="item.icon" class="text-xl group-hover:scale-110 transition-transform">
+      </ng-icon>
+
+      <span class="text-[10px] uppercase tracking-tighter font-medium">
+        {{ item.label }}
+      </span>
+
+      <div
+        class="h-1 w-1 rounded-full bg-indigo-500 opacity-0 group-[.active]:opacity-100 transition-opacity"
+      ></div>
+    </a>
+  }
+</nav>

@@ -1,0 +1,112 @@
+<div
+  class="fixed bottom-0 left-0 right-0 h-24 bg-zinc-900 border-t border-zinc-800 px-4 flex items-center justify-between z-50"
+>
+  <!-- Track Info -->
+  <div class="flex items-center gap-4 w-1/3">
+    @if (playerService.currentTrack(); as track) {
+      <div class="w-14 h-14 bg-zinc-800 rounded flex-shrink-0 overflow-hidden">
+        <img [src]="track.coverUrl" [alt]="track.title" fill />
+      </div>
+      <div class="flex flex-col overflow-hidden">
+        <span class="text-white text-sm font-medium truncate">{{ track.title }}</span>
+        <span class="text-zinc-400 text-xs truncate">{{ track.artist }}</span>
+      </div>
+    } @else {
+      <div class="w-14 h-14 bg-zinc-800 rounded flex-shrink-0 animate-pulse"></div>
+      <div class="flex flex-col gap-2">
+        <div class="h-4 w-32 bg-zinc-800 rounded animate-pulse"></div>
+        <div class="h-3 w-24 bg-zinc-800 rounded animate-pulse"></div>
+      </div>
+    }
+  </div>
+
+  <!-- Player Controls -->
+  <div class="flex flex-col items-center gap-2 w-1/3">
+    <div class="flex items-center gap-6">
+      <button
+        (click)="playerService.previousTrack()"
+        class="text-zinc-400 hover:text-white transition-colors"
+        aria-label="Previous track"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"></path>
+        </svg>
+      </button>
+
+      <button
+        (click)="playerService.togglePlay()"
+        class="w-8 h-8 flex items-center justify-center rounded-full bg-white text-black hover:scale-105 transition-transform"
+        [aria-label]="playerService.isPlaying() ? 'Pause' : 'Play'"
+      >
+        @if (playerService.isPlaying()) {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path>
+          </svg>
+        } @else {
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M8 5v14l11-7z"></path>
+          </svg>
+        }
+      </button>
+
+      <button
+        (click)="playerService.nextTrack()"
+        class="text-zinc-400 hover:text-white transition-colors"
+        aria-label="Next track"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="flex items-center gap-2 w-full max-w-md">
+      <span class="text-[10px] text-zinc-400 w-10 text-right">{{
+        playerService.currentTime() | formatDuration
+      }}</span>
+      <div class="flex-1 relative h-1 group flex items-center">
+        <input
+          type="range"
+          [min]="0"
+          [max]="playerService.duration() || 0"
+          [value]="playerService.currentTime()"
+          (input)="onSeek($event)"
+          class="absolute w-full h-1 bg-zinc-600 rounded-full appearance-none cursor-pointer accent-white"
+        />
+      </div>
+      <span class="text-[10px] text-zinc-400 w-10">{{
+        playerService.duration() | formatDuration
+      }}</span>
+    </div>
+  </div>
+
+  <!-- Volume/Extra -->
+  <div class="w-1/3 flex justify-end">
+    <!-- Volume controls could go here -->
+  </div>
+</div>

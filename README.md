@@ -1,59 +1,48 @@
-# GinTonicWebPlayer
+# 🍸 Gin Tonic Player
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+[![Angular Version](https://img.shields.io/badge/Angular-v21-DD0031?style=for-the-badge&logo=angular)](https://angular.dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-## Development server
+**Gin Tonic Player** is a high-performance, experimental web audio application built to showcase the cutting-edge capabilities of **Angular v21**. Designed as a technical "sandbox," it explores the synergy between the **Web Audio API** and the modern **Signals-based** reactive paradigm.
 
-To start a local development server, run:
+The project’s name is a tribute to its core philosophy: a refined, transparent, and powerful combination of a few high-quality "ingredients" working in perfect sync.
 
-```bash
-ng serve
+---
+
+## 🚀 Key Features & Architectural Highlights
+
+- **Signals-First Reactivity**: Utilizes Angular v21 Signals for state management, eliminating unnecessary change detection cycles and providing a granular, declarative flow for audio metadata and UI states.
+- **Web Audio API Implementation**: Bypasses standard HTML5 `<audio>` limitations by using an `AudioContext` to manage gain nodes, analyzers, and audio processing in real-time.
+- **Modern Control Flow**: Fully implemented using the new `@if`, `@for`, and `@switch` syntax for cleaner, more performant templates.
+- **Standalone Architecture**: A 100% standalone component structure, reducing boilerplate and improving tree-shaking efficiency.
+- **Real-time Audio Visualization**: Features a dedicated visualizer component that samples frequency data from the `AnalyserNode` to create dynamic UI feedback.
+
+---
+
+## 🛠 Tech Stack
+
+| Technology         | Purpose                                       |
+| :----------------- | :-------------------------------------------- |
+| **Angular v21**    | Core Framework (Signals, Zoneless-compatible) |
+| **TypeScript 5.x** | Type-safe application logic                   |
+| **Web Audio API**  | Low-level audio engine and DSP                |
+| **SCSS**           | Modular styling with CSS variables            |
+| **Lucide Icons**   | Minimalist iconography for the transport bar  |
+
+---
+
+## 📂 Project Structure
+
+```text
+src/app/
+├── core/
+│   ├── services/
+│   │   ├── audio-engine.service.ts   <-- Web Audio API Logic
+│   │   └── player-state.service.ts   <-- Signals-based State
+├── features/
+│   ├── player/                       <-- Main playback controls
+│   ├── visualizer/                   <-- Canvas-based frequency bars
+│   └── playlist/                     <-- Track management
+└── shared/
+    └── components/                   <-- Reusable UI atoms
 ```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

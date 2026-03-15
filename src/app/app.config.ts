@@ -1,11 +1,27 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideAppInitializer,
+  provideBrowserGlobalErrorListeners,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
+import { Config } from './services/config/config';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { filter, first } from 'rxjs';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes)
-  ]
+    provideRouter(routes),
+    provideAppInitializer(() => {
+      const navidromConfigResource = inject(Config).navidromeConfigResource;
+
+      return toObservable(navidromConfigResource.isLoading).pipe(
+        filter((loading) => loading === false),
+        first(),
+      );
+    }),
+  ],
 };
