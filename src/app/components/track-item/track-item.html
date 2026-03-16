@@ -1,22 +1,20 @@
 <div
-  class="group grid grid-cols-[16px_4fr_3fr_100px] gap-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all duration-200 items-center"
+  class="group grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all duration-200 items-center"
   (click)="onItemClick()"
 >
-  <div class="w-4 flex items-center justify-center text-zinc-600 font-mono text-xs">
-    <span>{{ index() + 1 }}</span>
-  </div>
-
-  <div class="flex items-center space-x-4 min-w-0">
+  <div class="flex items-center gap-4 min-w-0 overflow-hidden">
     <img
       [src]="track().coverUrl"
-      class="w-12 h-12 rounded-lg object-cover shadow-lg bg-zinc-900"
+      class="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover shadow-lg bg-zinc-900 shrink-0"
       alt="cover"
     />
-    <div class="flex flex-col min-w-0">
-      <span class="text-zinc-100 font-semibold truncate">
+    <div class="flex flex-col min-w-0 flex-1">
+      <span class="text-white font-bold truncate tracking-tight text-sm md:text-base">
         {{ track().title }}
       </span>
-      <span class="text-zinc-500 text-sm truncate">{{ track().artist }}</span>
+      <span class="text-zinc-400 text-xs md:text-sm font-medium truncate opacity-90">{{
+        track().artist
+      }}</span>
     </div>
   </div>
 
@@ -24,7 +22,7 @@
     {{ track().album }}
   </span>
 
-  <span class="text-zinc-500 text-sm text-right font-mono">
+  <span class="text-zinc-500 text-xs md:text-sm text-right font-mono tabular-nums">
     {{ track().duration | formatDuration }}
   </span>
 </div>

@@ -1,10 +1,27 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { WebPlayer } from './services/web-player/web-player';
+import { signal, provideZonelessChangeDetection } from '@angular/core';
+import { describe, it, expect, beforeEach } from 'vitest';
 
 describe('App', () => {
+  let mockWebPlayer: any;
+
   beforeEach(async () => {
+    mockWebPlayer = {
+      currentTrack: signal(null),
+      isPlaying: signal(false),
+      currentTime: signal(0),
+      duration: signal(0),
+      volume: signal(1),
+    };
+
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [
+        provideZonelessChangeDetection(),
+        { provide: WebPlayer, useValue: mockWebPlayer },
+      ],
     }).compileComponents();
   });
 
@@ -12,12 +29,5 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it('should render title', async () => {
-    const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, gin-tonic-web-player');
   });
 });

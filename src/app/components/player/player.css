@@ -1,3 +1,48 @@
 :host {
   display: block;
+  z-index: 50;
+}
+
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+input[type='range']:focus {
+  outline: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  margin-top: 0;
+}
+
+/* Firefox */
+input[type='range']::-moz-range-thumb {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  border: none;
+}
+
+/* Ensure the player container itself has enough space and contrast */
+:host {
+  display: block;
+  z-index: 50;
+  position: relative;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

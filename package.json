@@ -1,12 +1,13 @@
 {
   "name": "gin-tonic-web-player",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test --watch=false"
   },
   "prettier": {
     "printWidth": 100,
@@ -36,14 +37,19 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^2.3.1",
     "@angular/build": "^21.1.4",
     "@angular/cli": "^21.1.4",
     "@angular/compiler-cli": "^21.1.0",
+    "@angular/platform-browser-dynamic": "^21.2.4",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.1.12",
+    "@types/node": "^25.5.0",
     "jsdom": "^27.1.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
+    "vite": "^7.3.1",
     "vitest": "^4.0.8"
   }
 }

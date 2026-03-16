@@ -1,9 +1,8 @@
 @if (randomTrack.hasValue()) {
   <div class="w-full select-none">
     <div
-      class="grid grid-cols-[16px_4fr_3fr_100px] gap-4 px-4 py-2 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold border-b border-white/5 mb-4"
+      class="grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-2 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold border-b border-white/5 mb-4"
     >
-      <span>#</span>
       <span>Titolo</span>
       <span class="hidden md:block">Album</span>
       <span class="text-right">Durata</span>
@@ -11,7 +10,7 @@
 
     <div class="flex flex-col space-y-1">
       @for (track of randomTrack.value(); track track.id) {
-        <app-track-item [track]="track" [index]="$index"></app-track-item>
+        <app-track-item [track]="track"></app-track-item>
       } @empty {
         <div class="flex flex-col items-center justify-center py-20 text-zinc-700">
           <p class="italic font-medium">Nessun brano da mostrare.</p>
@@ -22,9 +21,8 @@
 } @else if (randomTrack.isLoading()) {
   <div class="w-full select-none">
     <div
-      class="grid grid-cols-[16px_4fr_3fr_100px] gap-4 px-4 py-2 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold border-b border-white/5 mb-4"
+      class="grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-2 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold border-b border-white/5 mb-4"
     >
-      <span>#</span>
       <span>Titolo</span>
       <span class="hidden md:block">Album</span>
       <span class="text-right">Durata</span>
@@ -32,17 +30,18 @@
 
     <div class="flex flex-col space-y-1 animate-pulse">
       @for (_ of [1, 2, 3, 4, 5, 6, 7]; track _) {
-        <div class="grid grid-cols-[16px_4fr_3fr_100px] gap-4 px-4 py-3 rounded-xl items-center">
-          <div class="w-4 h-4 bg-zinc-800 rounded-md"></div>
-          <div class="flex items-center space-x-4 min-w-0">
-            <div class="w-12 h-12 rounded-lg bg-zinc-800"></div>
-            <div class="flex flex-col min-w-0 space-y-2">
-              <div class="h-4 bg-zinc-800 rounded w-48"></div>
-              <div class="h-3 bg-zinc-800 rounded w-32"></div>
+        <div
+          class="grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-3 rounded-xl items-center"
+        >
+          <div class="flex items-center gap-4 min-w-0">
+            <div class="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-zinc-800 shrink-0"></div>
+            <div class="flex flex-col min-w-0 space-y-2 flex-1">
+              <div class="h-4 bg-zinc-800 rounded w-2/3 md:w-24"></div>
+              <div class="h-3 bg-zinc-800 rounded w-1/2 md:w-16"></div>
             </div>
           </div>
-          <div class="h-4 bg-zinc-800 rounded w-32 hidden md:block"></div>
-          <div class="h-4 bg-zinc-800 rounded w-12 ml-auto"></div>
+          <div class="h-4 bg-zinc-800 rounded w-3/4 hidden md:block"></div>
+          <div class="h-4 bg-zinc-800 rounded w-10 ml-auto"></div>
         </div>
       }
     </div>

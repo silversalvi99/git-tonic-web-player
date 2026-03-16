@@ -59,8 +59,10 @@ export class RestApi {
         return;
       }
 
+      console.log('Fetching random tracks from:', params.url);
       const getSongs$ = this.http.get<SubsonicResponse>(params.url).pipe(
         map((res) => {
+          console.log('Received API response:', res);
           const rawSongs = res['subsonic-response'].randomSongs?.song || [];
           return rawSongs.map((song) =>
             TrackMapper.fromNavidrome(song, navidromeBaseUrl, navidromeAuthParams),
@@ -68,7 +70,14 @@ export class RestApi {
         }),
       );
       await sleep(1000);
-      return await firstValueFrom(getSongs$);
+      try {
+        const result = await firstValueFrom(getSongs$);
+        console.log('Mapped tracks:', result?.length || 0);
+        return result;
+      } catch (err) {
+        console.error('Error in RestApi resource loader:', err);
+        throw err;
+      }
     },
   });
 
