@@ -6,6 +6,7 @@ import angular from 'angular-eslint';
 
 export default defineConfig([
   {
+    ignores: ['**/*.spec.ts', '**/tests/**'],
     files: ['**/*.ts'],
     extends: [
       eslint.configs.recommended,
