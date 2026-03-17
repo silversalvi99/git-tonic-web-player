@@ -1,4 +1,4 @@
-name: CI/CD Gin Tonic Player
+name: Gin Player Deploy CI/CD
 
 on:
   push:
@@ -12,7 +12,13 @@ permissions:
 
 jobs:
   quality-gate:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    env:
+      CI: 'true'
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.2-jammy
+      options: --network gin-network
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -21,48 +27,40 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Unit Tests
-        run: npm test
+      - name: Build Angular App
+        run: npm run build
 
-      - name: Get Playwright version
-        id: playwright-version
-        run: echo "version=$(npm ls @playwright/test --json | jq -r '.dependencies["@playwright/test"].version')" >> $GITHUB_OUTPUT
+      - name: Inject Secret Config into Build Result
+        env:
+          PRIVATE_CONFIG: ${{ secrets.NAVIDROME_CONFIG_JSON }}
+        run: |
+          # Trova la cartella di output (es. dist/project-name/browser)
+          TARGET_DIR=$(find dist -name "index.html" -exec dirname {} \;)
+          echo "Found target dir: $TARGET_DIR"
 
-      - name: Cache Playwright Browsers
-        id: playwright-cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.version }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
+          mkdir -p "$TARGET_DIR/assets"
+          echo "$PRIVATE_CONFIG" > "$TARGET_DIR/assets/config.json"
 
-      - name: Install Playwright Browsers
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
-        run: npx playwright install chromium webkit --with-deps
+          if [ -f "$TARGET_DIR/assets/config.json" ]; then
+            echo "✅ config.json loaded in $TARGET_DIR/assets/"
+          else
+            echo "❌ Error: Impossible to create config.json"
+            exit 1
+          fi
 
       - name: Run E2E Tests
-        run: npx playwright test
-
-      - name: Upload Playwright Report
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: playwright-report
-          path: playwright-report/
-          retention-days: 7
+        run: npx playwright test --max-failures=1
 
   release:
     needs: quality-gate
     runs-on: ubuntu-latest
     outputs:
-      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
       new_release_published: ${{ steps.semantic.outputs.new_release_published }}
+      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -79,9 +77,9 @@ jobs:
 
       - name: Semantic Release
         id: semantic
+        uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
 
   build-and-push:
     needs: release
@@ -113,12 +111,12 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ needs.release.outputs.new_release_version }}
-          # Caching dei layer per build ultra-rapide
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   deploy:
     needs: [release, build-and-push]
+    if: needs.release.outputs.new_release_published == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy via SSH
@@ -130,6 +128,6 @@ jobs:
           script: |
             cd /home/opc/
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin           
-            docker pull ghcr.io/${{ github.repository }}:latest            
+            docker compose pull gin-tonic-player
             docker compose up -d gin-tonic-player           
             docker image prune -f

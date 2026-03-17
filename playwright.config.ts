@@ -5,7 +5,6 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : undefined,
   reporter: process.env.CI ? 'github' : 'html',
 
   use: {
@@ -30,10 +29,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run start',
-    url: 'http://localhost:4200',
+    command: 'npx http-server dist/gin-tonic-web-player/browser -p 4200',
+    port: 4200,
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
     stdout: 'pipe',
     stderr: 'pipe',
   },
