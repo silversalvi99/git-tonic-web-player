@@ -1,3 +1,9 @@
+# [1.1.0](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.0.0...v1.1.0) (2026-03-20)
+
+### Features
+
+- search bar, i18n and player open mode ([e9da5fd](https://github.com/silversalvi99/git-tonic-web-player/commit/e9da5fd8c4860299b8211eabd0b22044175dd571))
+
 # 1.0.0 (2026-03-17)
 
 ### Bug Fixes
