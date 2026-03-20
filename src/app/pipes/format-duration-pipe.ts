@@ -7,7 +7,7 @@ import { Pipe, type PipeTransform } from '@angular/core';
 export class FormatDurationPipe implements PipeTransform {
   transform(seconds: string | number | undefined): string {
     if (!seconds) {
-      return '';
+      return '0:00';
     }
 
     const secondsNumber = typeof seconds === 'string' ? parseFloat(seconds) : seconds;

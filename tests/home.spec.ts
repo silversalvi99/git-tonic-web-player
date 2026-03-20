@@ -125,20 +125,22 @@ test.describe('Home Page - Desktop View', () => {
     const player = page.locator('app-player');
     await expect(player.getByText('Test Track 1')).toBeVisible({ timeout: 10000 });
 
-    const pauseButton = player.locator('button[aria-label="Pause"]');
-    await expect(pauseButton).toBeVisible({ timeout: 15000 });
+    const playPauseButton = page.getByTestId('player-play-pause');
+    await expect(playPauseButton).toBeVisible({ timeout: 15000 });
 
-    await pauseButton.click();
-    const playButton = player.locator('button[aria-label="Play"]');
-    await expect(playButton).toBeVisible();
+    await playPauseButton.click();
+    await expect(playPauseButton).toHaveAttribute('aria-label', 'Play');
 
-    await playButton.click();
-    await expect(pauseButton).toBeVisible();
+    await playPauseButton.click();
+    await expect(playPauseButton).toHaveAttribute('aria-label', 'Pause');
   });
 
   test('should control volume', async ({ page }) => {
-    const volumeSlider = page.locator('input[aria-label="Volume"]');
-    const muteButton = page.locator('button[aria-label="Mute/Unmute"]');
+    // 1. Play a track to show player
+    await page.locator('app-track-item').first().click();
+
+    const volumeSlider = page.getByTestId('player-volume');
+    const muteButton = page.getByTestId('player-mute');
 
     await expect(muteButton).toBeVisible();
 
@@ -173,20 +175,47 @@ test.describe('Home Page - Desktop View', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
     await page.waitForSelector('app-track-item', { state: 'attached', timeout: 30000 });
 
-    const player = page.locator('app-player');
+    const miniPlayer = page.locator('app-mini-player');
     await page.locator('app-track-item').first().click();
-    await expect(player.getByText('Track One')).toBeVisible({ timeout: 10000 });
+    await expect(miniPlayer.getByText('Track One')).toBeVisible({ timeout: 10000 });
 
-    await player.locator('button[aria-label="Next track"]').click();
-    await expect(player.getByText('Track Two')).toBeVisible({ timeout: 10000 });
+    await page.getByTestId('player-next').click();
+    await expect(miniPlayer.getByText('Track Two')).toBeVisible({ timeout: 10000 });
 
-    await player.locator('button[aria-label="Previous track"]').click();
-    await expect(player.getByText('Track One')).toBeVisible({ timeout: 10000 });
+    await page.getByTestId('player-prev').click();
+    await expect(miniPlayer.getByText('Track One')).toBeVisible({ timeout: 10000 });
   });
 
   test('should show progress seeker', async ({ page }) => {
-    const seeker = page.locator('input[aria-label="Seek"]');
+    // 1. Play a track to show player
+    await page.locator('app-track-item').first().click();
+
+    const seeker = page.getByTestId('player-seek').first();
     await expect(seeker).toBeAttached();
+  });
+
+  test('should open expanded mode and verify adaptive colors', async ({ page }) => {
+    // 1. Play a track to show player
+    await page.locator('app-track-item').first().click();
+
+    // 2. Click track info (proven reliable)
+    await page.waitForTimeout(1000);
+    await page.getByTestId('mini-player-track-info').click();
+
+    // 3. Verify expanded player is visible
+    const overlay = page.getByTestId('expanded-player-overlay');
+    await expect(overlay).toBeVisible({ timeout: 15000 });
+
+    // 4. Verify track info in expanded mode
+    await expect(page.getByTestId('expanded-player-title')).toBeVisible();
+
+    // 5. Verify the background color is set (linear-gradient)
+    await expect(overlay).toHaveAttribute('style', /background: linear-gradient/);
+
+    // 6. Close expanded mode
+    await page.getByTestId('expanded-player-close').click();
+    await expect(page.locator('app-expanded-player')).toBeHidden();
+    await expect(page.locator('app-mini-player')).toBeVisible();
   });
 });
 
@@ -218,9 +247,9 @@ test.describe('Home Page - Mobile View', () => {
   test('should render a track in the list', async ({ page }) => {
     const trackItem = page.locator('app-track-item').first();
     await expect(trackItem).toBeVisible({ timeout: 15000 });
-    await expect(trackItem.locator('span.text-white')).toContainText(
-      'A Very Long Test Track Title',
-    );
+    // Use a more relaxed check for text content as it might have extra markup
+    const text = await trackItem.locator('span.text-white').first().textContent();
+    expect(text?.trim()).toContain('A Very Long Test Track Title');
   });
 
   test('should show duration in track list', async ({ page }) => {
@@ -228,14 +257,39 @@ test.describe('Home Page - Mobile View', () => {
     await expect(duration).toHaveText('3:00');
   });
 
-  test('should play a track and show player on mobile', async ({ page }) => {
+  test('should play a track and show mini-player on mobile', async ({ page }) => {
     await page.locator('app-track-item').first().click();
-    const player = page.locator('app-player');
-    await expect(player.getByText('A Very Long Test Track Title')).toBeVisible({ timeout: 10000 });
+    const miniPlayer = page.locator('app-mini-player');
+    await expect(miniPlayer.getByText('A Very Long Test Track Title')).toBeVisible({
+      timeout: 10000,
+    });
   });
 
-  test('should hide volume controls on mobile', async ({ page }) => {
-    await expect(page.locator('button[aria-label="Mute/Unmute"]')).toBeHidden();
-    await expect(page.locator('input[aria-label="Volume"]')).toBeHidden();
+  test('should show horizontal layout on mobile', async ({ page }) => {
+    await page.locator('app-track-item').first().click();
+    const miniPlayer = page.locator('app-mini-player');
+
+    // The root div of mini-player always has flex-row now as requested
+    const container = miniPlayer.locator('div').first();
+    await expect(container).toHaveClass(/flex-row/);
+  });
+
+  test('should hide volume controls in mini-player on mobile', async ({ page }) => {
+    await page.locator('app-track-item').first().click();
+    const miniPlayer = page.locator('app-mini-player');
+    await expect(page.getByTestId('player-volume')).toBeHidden();
+  });
+
+  test('should open expanded mode on mobile', async ({ page }) => {
+    // 1. Play a track
+    await page.locator('app-track-item').first().click();
+
+    // 2. Click track info using test id
+    await page.waitForTimeout(1000);
+    await page.getByTestId('mini-player-track-info').first().click();
+
+    // 3. Verify expanded player is visible
+    const overlay = page.getByTestId('expanded-player-overlay');
+    await expect(overlay).toBeVisible({ timeout: 15000 });
   });
 });

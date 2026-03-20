@@ -1,8 +1,3 @@
-:host {
-  display: block;
-  z-index: 50;
-}
-
 input[type='range'] {
   -webkit-appearance: none;
   appearance: none;
@@ -34,7 +29,6 @@ input[type='range']::-moz-range-thumb {
   border: none;
 }
 
-/* Ensure the player container itself has enough space and contrast */
 :host {
   display: block;
   z-index: 50;

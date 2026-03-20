@@ -1,0 +1,22 @@
+{
+  "settingsTitle": "Settings",
+  "languageSectionTitle": "Language",
+  "selectLanguageLabel": "Choose your language:",
+  "languageChangeNote": "Note: The application will apply the new language instantly.",
+  "sidebar": {
+    "home": "Home",
+    "settings": "Settings"
+  },
+  "search": {
+    "placeholder": "Search songs",
+    "clearLabel": "Clear search",
+    "discoverBtn": "Discover new songs!"
+  },
+  "tracks": {
+    "title": "Title",
+    "album": "Album",
+    "duration": "Duration",
+    "noTracks": "No tracks to show.",
+    "errorLoading": "Error loading data, please try again."
+  }
+}

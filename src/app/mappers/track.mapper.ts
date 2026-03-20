@@ -8,7 +8,8 @@ export class TrackMapper {
       artist: song.artist,
       album: song.album,
       duration: song.duration,
-      coverUrl: `${baseUrl}/getCoverArt.view?${authParams}&id=${song.id}`,
+      coverThumb: `${baseUrl}/getCoverArt.view?${authParams}&id=${song.id}&size=120`,
+      coverFull: `${baseUrl}/getCoverArt.view?${authParams}&id=${song.id}&size=600`,
       streamUrl: `${baseUrl}/stream.view?${authParams}&id=${song.id}`,
     };
   }

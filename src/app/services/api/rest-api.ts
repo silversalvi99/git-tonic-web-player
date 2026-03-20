@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, inject, Injectable, resource } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { Config } from '../config/config';
 import { Md5 } from 'ts-md5';
 import { TrackMapper } from '../../mappers/track.mapper';
-import { SubsonicResponse, Track } from '../../models/track.model';
-import { firstValueFrom, map } from 'rxjs';
-import { sleep } from '../../utils/utils';
+import { RandomSongsResponse, SearchResponse } from '../../models/track.model';
+import { catchError, delay, map, of } from 'rxjs';
+import { rxResource } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
@@ -15,11 +15,16 @@ export class RestApi {
   private readonly configService = inject(Config);
   /** HttpClient inject */
   private readonly http = inject(HttpClient);
+  /** Search term signal */
+  readonly searchTerm = signal('');
+  /** Refresh tracks signal */
+  readonly refreshTracks = signal(0);
 
   /**
    * Navidrome auth params signal
    */
   private readonly navidromeAuthParams = computed(() => {
+    this.refreshTracks();
     const navidromeConfigValue = this.configService.navidromeConfigResource.value();
 
     if (!navidromeConfigValue) {
@@ -33,7 +38,46 @@ export class RestApi {
   /**
    * Resouce that load random track from api
    */
-  public readonly randomTracksResource = resource({
+  private readonly randomTracksResource = rxResource({
+    params: () => {
+      this.refreshTracks();
+      const navidromeConfigValue = this.configService.navidromeConfigResource.value();
+      const authParams = this.navidromeAuthParams();
+
+      if (!navidromeConfigValue || !authParams) {
+        return;
+      }
+
+      return { url: `${navidromeConfigValue.baseUrl}/getRandomSongs.view?${authParams}` };
+    },
+    stream: ({ params }) => {
+      const navidromeBaseUrl = this.configService.navidromeConfigResource.value()?.baseUrl;
+      const navidromeAuthParams = this.navidromeAuthParams();
+
+      if (!navidromeBaseUrl || !navidromeAuthParams) {
+        return of([]);
+      }
+
+      return this.http.get<RandomSongsResponse>(params.url).pipe(
+        map((res) => {
+          const rawSongs = res['subsonic-response'].randomSongs?.song || [];
+          return rawSongs.map((song) =>
+            TrackMapper.fromNavidrome(song, navidromeBaseUrl, navidromeAuthParams),
+          );
+        }),
+        delay(1000),
+        catchError((err) => {
+          console.error('Error in RestApi resource loader:', err);
+          return of([]);
+        }),
+      );
+    },
+  });
+
+  /**
+   * Resource that load search track from api via query string
+   */
+  private readonly searchTracksResource = rxResource({
     params: () => {
       const navidromeConfigValue = this.configService.navidromeConfigResource.value();
       const authParams = this.navidromeAuthParams();
@@ -42,49 +86,45 @@ export class RestApi {
         return;
       }
 
-      return { url: `${navidromeConfigValue.baseUrl}/getRandomSongs.view?${authParams}&size=30` };
+      return {
+        url: `${navidromeConfigValue.baseUrl}/search3.view?${authParams}&query=${this.searchTerm()}`,
+      };
     },
-    loader: async ({ params }) => {
-      if (!params.url) {
-        return;
-      }
-
+    stream: ({ params }) => {
       const navidromeBaseUrl = this.configService.navidromeConfigResource.value()?.baseUrl;
-      if (!navidromeBaseUrl) {
-        return;
-      }
-
       const navidromeAuthParams = this.navidromeAuthParams();
-      if (!navidromeAuthParams) {
-        return;
+
+      if (!navidromeBaseUrl || !navidromeAuthParams) {
+        return of([]);
       }
 
-      console.log('Fetching random tracks from:', params.url);
-      const getSongs$ = this.http.get<SubsonicResponse>(params.url).pipe(
+      return this.http.get<SearchResponse>(params.url).pipe(
         map((res) => {
-          console.log('Received API response:', res);
-          const rawSongs = res['subsonic-response'].randomSongs?.song || [];
+          const rawSongs = res['subsonic-response'].searchResult3?.song || [];
           return rawSongs.map((song) =>
             TrackMapper.fromNavidrome(song, navidromeBaseUrl, navidromeAuthParams),
           );
         }),
+        delay(1000),
+        catchError((err) => {
+          console.error('Error in RestApi resource loader:', err);
+          return of([]);
+        }),
       );
-      await sleep(1000);
-      try {
-        const result = await firstValueFrom(getSongs$);
-        console.log('Mapped tracks:', result?.length || 0);
-        return result;
-      } catch (err) {
-        console.error('Error in RestApi resource loader:', err);
-        throw err;
-      }
     },
   });
 
   /**
-   * Refresh the random track resource
+   * Computed signal that return the random tracks resource or the search tracks resource
    */
-  refresh() {
+  tracks = computed(() => {
+    return this.searchTerm() ? this.searchTracksResource : this.randomTracksResource;
+  });
+
+  /**
+   * Refresh the random tracks resource
+   */
+  refreshRandomTracks() {
     this.randomTracksResource.reload();
   }
 }

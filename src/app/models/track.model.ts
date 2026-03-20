@@ -4,7 +4,8 @@ export interface Track {
   artist: string;
   album: string;
   duration: number;
-  coverUrl: string;
+  coverThumb: string;
+  coverFull: string;
   streamUrl: string;
 }
 
@@ -16,14 +17,23 @@ export interface NavidromeSong {
   duration: number;
 }
 
-export interface SubsonicResponse {
+interface SubsonicResponse<T> {
   'subsonic-response': {
     status: string;
     version: string;
     type: string;
     serverVersion: string;
-    randomSongs?: {
-      song: NavidromeSong[];
-    };
-  };
+  } & T;
 }
+
+export type RandomSongsResponse = SubsonicResponse<{
+  randomSongs: {
+    song: NavidromeSong[];
+  };
+}>;
+
+export type SearchResponse = SubsonicResponse<{
+  searchResult3: {
+    song: NavidromeSong[];
+  };
+}>;

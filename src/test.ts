@@ -1,8 +1,12 @@
-import '@analogjs/vite-plugin-angular/setup-vitest';
 import { vi } from 'vitest';
+import { TestBed } from '@angular/core/testing';
+import {
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting,
+} from '@angular/platform-browser-dynamic/testing';
 
-// Mock Audio
-const mockAudio = {
+// Mock Audio to return a fresh instance each time
+export const createMockAudio = () => ({
   play: vi.fn().mockResolvedValue(undefined),
   pause: vi.fn(),
   load: vi.fn(),
@@ -15,6 +19,17 @@ const mockAudio = {
   onerror: null,
   onplay: null,
   onpause: null,
-};
+});
 
-vi.stubGlobal('Audio', vi.fn(() => mockAudio));
+// Setup global Audio mock using Vitest's stubGlobal
+vi.stubGlobal(
+  'Audio',
+  vi.fn(() => createMockAudio()),
+);
+
+// Initialize the Angular testing environment if not already initialized
+try {
+  TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
+} catch {
+  // Environment already initialized or error during init
+}

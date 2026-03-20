@@ -3,6 +3,8 @@ import { App } from './app';
 import { WebPlayer } from './services/web-player/web-player';
 import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { describe, it, expect, beforeEach } from 'vitest';
+import { TranslateModule } from '@ngx-translate/core';
+import { provideRouter } from '@angular/router';
 
 describe('App', () => {
   let mockWebPlayer: any;
@@ -17,9 +19,10 @@ describe('App', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [App, TranslateModule.forRoot()],
       providers: [
         provideZonelessChangeDetection(),
+        provideRouter([]),
         { provide: WebPlayer, useValue: mockWebPlayer },
       ],
     }).compileComponents();

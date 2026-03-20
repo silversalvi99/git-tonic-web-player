@@ -7,12 +7,15 @@
     <main class="grow overflow-y-auto p-6 md:p-10 pb-64 md:pb-32">
       <section>
         <h1 class="text-4xl font-extrabold tracking-tighter mb-8">Scopri</h1>
+        <app-search-songs></app-search-songs>
         <app-tracks-list></app-tracks-list>
       </section>
     </main>
 
     <div class="fixed bottom-0 left-0 right-0 z-50 flex flex-col">
-      <app-player class="w-full"></app-player>
+      @if (isPlayerVisible()) {
+        <app-player class="w-full"></app-player>
+      }
       <div class="block md:hidden w-full">
         <app-tabs></app-tabs>
       </div>

@@ -1,0 +1,199 @@
+<div
+  class="open-mode-overlay fixed inset-0 z-200 flex flex-col items-center justify-between p-4 md:p-12 overflow-hidden bg-black text-white"
+  [class.closing]="isClosing()"
+  [style.background]="'linear-gradient(to bottom, ' + currentColors()[0] + ' 0%, #000 100%)'"
+  data-testid="expanded-player-overlay"
+>
+  <!-- Ambient Background -->
+  <div class="ambient-bg absolute inset-0 -z-10 pointer-events-none opacity-60">
+    <div
+      class="blob blob-1 absolute w-[60vh] h-[60vh] rounded-full blur-[80px]"
+      [style.background]="currentColors()[0]"
+      [style.--color]="currentColors()[0]"
+    ></div>
+    <div
+      class="blob blob-2 absolute w-[50vh] h-[50vh] rounded-full blur-[90px]"
+      [style.background]="currentColors()[1]"
+      [style.--color]="currentColors()[1]"
+    ></div>
+    <div
+      class="blob blob-3 absolute w-[70vh] h-[70vh] rounded-full blur-[100px]"
+      [style.background]="currentColors()[2]"
+      [style.--color]="currentColors()[2]"
+    ></div>
+  </div>
+
+  <!-- Header / Close button -->
+  <div
+    class="w-full flex justify-between items-center mb-4 md:mb-0"
+    [class.text-zinc-950]="isLightBackground()"
+  >
+    <button
+      (click)="toggleClose.emit()"
+      class="p-2 hover:bg-black/10 rounded-full transition-colors"
+      aria-label="Close"
+      data-testid="expanded-player-close"
+    >
+      <ng-icon name="heroChevronDown" class="text-3xl"></ng-icon>
+    </button>
+    <div class="flex flex-col items-center">
+      <span class="text-[10px] uppercase tracking-widest font-bold opacity-70"
+        >Riproducendo da</span
+      >
+      <span class="text-xs font-semibold">{{
+        webPlayer.currentTrack()?.album || 'Gin Tonic Web Player'
+      }}</span>
+    </div>
+    <div class="w-10"></div>
+    <!-- Spacer for centering -->
+  </div>
+
+  <!-- Main Content: Art + Info -->
+  <div
+    class="flex flex-col md:flex-row items-center justify-center gap-12 md:gap-24 w-full max-w-6xl grow"
+  >
+    <!-- Large Cover -->
+    <div class="relative group">
+      <img
+        [src]="webPlayer.currentTrack()?.coverFull"
+        class="w-[70vw] h-[70vw] md:w-[400px] md:h-[400px] rounded-lg shadow-2xl object-cover z-10 relative transition-transform duration-700 group-hover:scale-[1.02]"
+        [alt]="webPlayer.currentTrack()?.title"
+      />
+      <div
+        class="cover-glow absolute inset-0 blur-3xl opacity-40 -z-10 transition-transform duration-700 group-hover:scale-110"
+        [style.background]="currentColors()[0]"
+      ></div>
+    </div>
+
+    <!-- Track Details & Controls Container -->
+    <div class="flex flex-col w-full md:w-[450px] gap-8 md:gap-12">
+      <div class="flex flex-col gap-2 text-center md:text-left">
+        <h2
+          class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight"
+          [class.text-zinc-950]="isLightBackground()"
+          data-testid="expanded-player-title"
+        >
+          {{ webPlayer.currentTrack()?.title }}
+        </h2>
+        <p
+          class="text-xl md:text-2xl font-medium"
+          [class.text-zinc-800]="isLightBackground()"
+          [class.text-white/70]="!isLightBackground()"
+          data-testid="expanded-player-artist"
+        >
+          {{ webPlayer.currentTrack()?.artist }}
+        </p>
+      </div>
+
+      <!-- Expanded Seeker -->
+      <div class="flex flex-col gap-2">
+        <div class="relative w-full h-8 flex items-center group/exp-seeker">
+          <div
+            class="relative w-full h-1.5 bg-white/10 rounded-full overflow-hidden"
+            [class.bg-black/10]="isLightBackground()"
+          >
+            <div
+              class="h-full bg-white group-hover/exp-seeker:bg-[#251db9] transition-colors"
+              [class.bg-zinc-950]="isLightBackground()"
+              [style.width.%]="(displayTime() / (webPlayer.duration() || 1)) * 100"
+            ></div>
+          </div>
+          <input
+            type="range"
+            [min]="0"
+            [max]="webPlayer.duration() || 0"
+            [value]="displayTime()"
+            (input)="onSeekInput($event)"
+            (change)="onSeekChange($event)"
+            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
+            aria-label="Seek track"
+            data-testid="player-seek"
+          />
+          <div
+            class="absolute w-4 h-4 bg-white rounded-full shadow-xl scale-0 group-hover/exp-seeker:scale-100 transition-transform pointer-events-none z-40"
+            [class.bg-zinc-950]="isLightBackground()"
+            [style.left.%]="(displayTime() / (webPlayer.duration() || 1)) * 100"
+            style="transform: translateX(-50%)"
+          ></div>
+        </div>
+        <div
+          class="flex justify-between text-xs font-mono tracking-wider"
+          [class.text-zinc-950]="isLightBackground()"
+          [class.text-white/50]="!isLightBackground()"
+        >
+          <span>{{ webPlayer.currentTime() | formatDuration }}</span>
+          <span>{{ webPlayer.duration() | formatDuration }}</span>
+        </div>
+      </div>
+
+      <!-- Main Large Controls -->
+      <div class="flex items-center justify-center gap-12 px-4 md:px-0">
+        <button
+          (click)="webPlayer.previousTrack()"
+          class="text-white/70 hover:text-white transition-all active:scale-90"
+          aria-label="Previous track"
+          data-testid="player-prev"
+        >
+          <ng-icon name="heroBackward" class="text-4xl"></ng-icon>
+        </button>
+
+        <button
+          (click)="webPlayer.togglePlay()"
+          class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full bg-white text-black hover:scale-110 active:scale-95 transition-all shadow-xl"
+          [aria-label]="webPlayer.isPlaying() ? 'Pause' : 'Play'"
+          data-testid="player-play-pause"
+        >
+          <ng-icon
+            [name]="webPlayer.isPlaying() ? 'heroPause' : 'heroPlay'"
+            class="text-5xl"
+          ></ng-icon>
+        </button>
+
+        <button
+          (click)="webPlayer.nextTrack()"
+          class="text-white/70 hover:text-white transition-all active:scale-90"
+          aria-label="Next track"
+          data-testid="player-next"
+        >
+          <ng-icon name="heroForward" class="text-4xl"></ng-icon>
+        </button>
+      </div>
+
+      <!-- Volume Row -->
+      <div
+        class="flex items-center gap-4 px-4 md:px-0 transition-opacity"
+        [class.opacity-60]="!isLightBackground()"
+        [class.hover:opacity-100]="!isLightBackground()"
+        [class.text-zinc-950]="isLightBackground()"
+      >
+        <ng-icon
+          [name]="webPlayer.volume() === 0 ? 'heroSpeakerXMark' : 'heroSpeakerWave'"
+          class="text-xl"
+        ></ng-icon>
+        <div class="relative grow h-8 flex items-center group/exp-vol">
+          <div
+            class="relative w-full h-1 bg-white/20 rounded-full overflow-hidden"
+            [class.bg-black/10]="isLightBackground()"
+          >
+            <div
+              class="h-full bg-white rounded-full transition-colors"
+              [class.bg-zinc-950]="isLightBackground()"
+              [style.width.%]="webPlayer.volume() * 100"
+            ></div>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            [value]="webPlayer.volume()"
+            (input)="onVolumeChange($event)"
+            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
+            aria-label="Volume"
+            data-testid="player-volume"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

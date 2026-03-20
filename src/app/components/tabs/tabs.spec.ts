@@ -3,6 +3,7 @@ import { Tabs } from './tabs';
 import { provideRouter } from '@angular/router';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { describe, it, expect, beforeEach } from 'vitest';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('TabsComponent', () => {
   let component: Tabs;
@@ -10,7 +11,7 @@ describe('TabsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Tabs],
+      imports: [Tabs, TranslateModule.forRoot()],
       providers: [provideZonelessChangeDetection(), provideRouter([])],
     }).compileComponents();
 

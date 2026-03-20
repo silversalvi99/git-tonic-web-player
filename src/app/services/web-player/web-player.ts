@@ -11,32 +11,50 @@ export class WebPlayer {
   currentTrack = signal<Track | null>(null);
   /** Current time signal */
   currentTime = signal<number>(0);
+  /** Is seeking signal */
+  isSeeking = signal<boolean>(false);
   /** Duration signal */
   duration = signal<number>(0);
   /** Queue signal */
   queue = signal<Track[]>([]);
   /** Volume signal (0 to 1) */
   volume = signal<number>(1);
+  /** Open mode signal */
+  isOpenMode = signal<boolean>(false);
+  /**  */
 
   /** Audio element reference */
-  private audio = new Audio();
+  /** Audio element reference */
+  private _audio?: HTMLAudioElement;
+
+  /** Lazy getter for audio element */
+  private get audio(): HTMLAudioElement {
+    if (!this._audio) {
+      this._audio = new Audio();
+      this.setupAudioListeners();
+    }
+    return this._audio;
+  }
+
+  private setupAudioListeners(): void {
+    if (!this._audio) return;
+
+    this._audio.ontimeupdate = () => {
+      if (!this.isSeeking()) {
+        this.currentTime.set(this._audio!.currentTime);
+      }
+    };
+
+    this._audio.onloadedmetadata = () => {
+      this.duration.set(this._audio!.duration);
+    };
+
+    this._audio.onplay = () => this.isPlaying.set(true);
+    this._audio.onpause = () => this.isPlaying.set(false);
+  }
 
   constructor() {
-    this.audio.ontimeupdate = () => {
-      this.currentTime.set(this.audio.currentTime);
-    };
-
-    this.audio.onloadedmetadata = () => {
-      console.log('Audio metadata loaded, duration:', this.audio.duration);
-      this.duration.set(this.audio.duration);
-    };
-
-    this.audio.onerror = (e) => {
-      console.error('Audio error:', e, this.audio.error);
-    };
-
-    this.audio.onplay = () => console.log('Audio playback started');
-    this.audio.onpause = () => console.log('Audio playback paused');
+    // Audio is initialized lazily when first accessed
   }
 
   /**
@@ -89,6 +107,7 @@ export class WebPlayer {
    */
   seek(time: number): void {
     this.audio.currentTime = time;
+    this.currentTime.set(time);
   }
 
   /**

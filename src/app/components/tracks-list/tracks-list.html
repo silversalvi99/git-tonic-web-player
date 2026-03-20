@@ -1,31 +1,31 @@
-@if (randomTrack.hasValue()) {
+@if (tracks().hasValue()) {
   <div class="w-full select-none">
     <div
       class="grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-2 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold border-b border-white/5 mb-4"
     >
-      <span>Titolo</span>
-      <span class="hidden md:block">Album</span>
-      <span class="text-right">Durata</span>
+      <span>{{ 'tracks.title' | translate }}</span>
+      <span class="hidden md:block">{{ 'tracks.album' | translate }}</span>
+      <span class="text-right">{{ 'tracks.duration' | translate }}</span>
     </div>
 
     <div class="flex flex-col space-y-1">
-      @for (track of randomTrack.value(); track track.id) {
+      @for (track of tracks().value(); track track.id) {
         <app-track-item [track]="track"></app-track-item>
       } @empty {
         <div class="flex flex-col items-center justify-center py-20 text-zinc-700">
-          <p class="italic font-medium">Nessun brano da mostrare.</p>
+          <p class="italic font-medium">{{ 'tracks.noTracks' | translate }}</p>
         </div>
       }
     </div>
   </div>
-} @else if (randomTrack.isLoading()) {
+} @else if (tracks().isLoading()) {
   <div class="w-full select-none">
     <div
       class="grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-2 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold border-b border-white/5 mb-4"
     >
-      <span>Titolo</span>
-      <span class="hidden md:block">Album</span>
-      <span class="text-right">Durata</span>
+      <span>{{ 'tracks.title' | translate }}</span>
+      <span class="hidden md:block">{{ 'tracks.album' | translate }}</span>
+      <span class="text-right">{{ 'tracks.duration' | translate }}</span>
     </div>
 
     <div class="flex flex-col space-y-1 animate-pulse">
@@ -46,8 +46,8 @@
       }
     </div>
   </div>
-} @else if (randomTrack.error()) {
+} @else if (tracks().error()) {
   <div class="flex flex-col items-center justify-center py-20 text-zinc-700">
-    <p class="italic font-medium">Errore nel caricamento dei dati, si prega di riprovare.</p>
+    <p class="italic font-medium">{{ 'tracks.errorLoading' | translate }}</p>
   </div>
 }

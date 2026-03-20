@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { WebPlayer } from './web-player';
 import { Track } from '../../models/track.model';
+import { provideZonelessChangeDetection, signal } from '@angular/core';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 describe('WebPlayer', () => {
@@ -13,12 +14,13 @@ describe('WebPlayer', () => {
     artist: 'Test Artist',
     album: 'Test Album',
     duration: 180,
-    coverUrl: 'test-cover',
+    coverThumb: 'test-cover-thumb',
+    coverFull: 'test-cover-full',
     streamUrl: 'test-stream',
   };
 
   beforeEach(() => {
-    // Mock Audio
+    // Ensure we have a fresh mock for each test
     mockAudio = {
       play: vi.fn().mockResolvedValue(undefined),
       pause: vi.fn(),
@@ -29,7 +31,8 @@ describe('WebPlayer', () => {
       duration: 0,
     };
 
-    // Replace global Audio constructor
+    // Override the global Audio only for this test suite to be safe
+    // We use a regular function because arrow functions cannot be used as constructors
     vi.stubGlobal(
       'Audio',
       vi.fn(function () {
@@ -37,7 +40,9 @@ describe('WebPlayer', () => {
       }),
     );
 
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideZonelessChangeDetection()],
+    });
     service = TestBed.inject(WebPlayer);
   });
 
@@ -96,7 +101,18 @@ describe('WebPlayer', () => {
   });
 
   it('should seek to time', () => {
+    service.currentTrack.set(mockTrack);
     service.seek(45);
     expect(mockAudio.currentTime).toBe(45);
+  });
+
+  it('should track isSeeking state', () => {
+    expect(service.isSeeking()).toBe(false);
+    service.seek(45);
+    expect(service.isSeeking()).toBe(false); // Seek is immediate in mock
+
+    // Manual trigger if we wanted to test the input/change logic
+    service.isSeeking.set(true);
+    expect(service.isSeeking()).toBe(true);
   });
 });

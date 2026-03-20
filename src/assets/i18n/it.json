@@ -1,0 +1,22 @@
+{
+  "settingsTitle": "Impostazioni",
+  "languageSectionTitle": "Lingua",
+  "selectLanguageLabel": "Scegli la tua lingua:",
+  "languageChangeNote": "Nota: L'applicazione applicherà la nuova lingua istantaneamente.",
+  "sidebar": {
+    "home": "Home",
+    "settings": "Impostazioni"
+  },
+  "search": {
+    "placeholder": "Cerca brani",
+    "clearLabel": "Cancella ricerca",
+    "discoverBtn": "Scopri nuovi brani!"
+  },
+  "tracks": {
+    "title": "Titolo",
+    "album": "Album",
+    "duration": "Durata",
+    "noTracks": "Nessun brano da mostrare.",
+    "errorLoading": "Errore nel caricamento dei dati, si prega di riprovare."
+  }
+}

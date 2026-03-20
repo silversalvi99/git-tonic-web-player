@@ -28,7 +28,8 @@ describe('TrackItemComponent', () => {
       artist: 'Test Artist',
       album: 'Test Album',
       duration: 120,
-      coverUrl: 'test-url',
+      coverThumb: 'test-url-thumb',
+      coverFull: 'test-url-full',
       streamUrl: 'test-stream-url',
     };
     fixture.componentRef.setInput('track', mockTrack);
