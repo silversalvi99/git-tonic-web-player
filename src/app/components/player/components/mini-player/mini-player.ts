@@ -11,13 +11,14 @@ import {
   heroArrowsPointingOut,
   heroChevronUp,
 } from '@ng-icons/heroicons/outline';
-import { WebPlayer as PlayerService } from '../../../../services/web-player/web-player';
+import { WebPlayer } from '../../../../services/web-player/web-player';
 import { FormatDurationPipe } from '../../../../pipes/format-duration-pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-mini-player',
   standalone: true,
-  imports: [CommonModule, FormatDurationPipe, NgIcon],
+  imports: [CommonModule, FormatDurationPipe, NgIcon, TranslateModule],
   providers: [
     provideIcons({
       heroBackward,
@@ -34,11 +35,13 @@ import { FormatDurationPipe } from '../../../../pipes/format-duration-pipe';
 })
 export class MiniPlayer {
   /** Web player service inject */
-  protected readonly webPlayer = inject(PlayerService);
+  protected readonly webPlayer = inject(WebPlayer);
 
   /** Output to notify parent to toggle open mode */
   toggleOpenMode = output<void>();
 
+  /** Signal to store the previous volume before muting */
+  private readonly lastVolume = signal(1);
   /** Signal to track if the user is dragging the seek bar */
   private readonly isDragging = signal(false);
   /** Signal to store the temporary seek value during drag */

@@ -2,7 +2,11 @@
   "settingsTitle": "Settings",
   "languageSectionTitle": "Language",
   "selectLanguageLabel": "Choose your language:",
-  "languageChangeNote": "Note: The application will apply the new language instantly.",
+  "languageChangeNote": "Changes will be applied immediately to supported elements.",
+  "themeSectionTitle": "Theme",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeSystem": "System",
   "sidebar": {
     "home": "Home",
     "settings": "Settings"
@@ -18,5 +22,22 @@
     "duration": "Duration",
     "noTracks": "No tracks to show.",
     "errorLoading": "Error loading data, please try again."
+  },
+  "player": {
+    "expand": "Expand player",
+    "close": "Close",
+    "seek": "Seek track",
+    "prev": "Previous track",
+    "next": "Next track",
+    "play": "Play",
+    "pause": "Pause",
+    "mute": "Mute",
+    "unmute": "Unmute",
+    "volume": "Volume",
+    "playingFrom": "Playing from",
+    "unknownAlbum": "Gin Tonic Web Player"
+  },
+  "home": {
+    "discover": "Discover"
   }
 }

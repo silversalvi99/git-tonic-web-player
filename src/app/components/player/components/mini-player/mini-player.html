@@ -1,18 +1,18 @@
 <div
-  class="relative flex flex-row items-center justify-between bg-zinc-950 border-t border-zinc-900 px-4 py-2 md:py-3 h-20 md:h-24 transition-all group/container"
+  class="relative flex flex-row items-center justify-between bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-900 px-4 py-2 md:py-3 h-20 md:h-24 transition-all group/container"
 >
   <!-- Expand Handle -->
   <div
     (click)="toggleOpenMode.emit()"
-    class="absolute -top-3 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-zinc-800/80 rounded-full cursor-pointer hover:bg-zinc-600 transition-all z-60 hover:scale-x-110"
-    aria-label="Expand player"
+    class="absolute -top-3 left-1/2 -translate-x-1/2 w-10 h-1.5 bg-zinc-200 dark:bg-zinc-800/80 rounded-full cursor-pointer hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-all z-60 hover:scale-x-110"
+    [attr.aria-label]="'player.expand' | translate"
     data-testid="mini-player-expand"
   ></div>
 
   <div class="absolute -top-1.5 left-0 right-0 h-4 group/seeker z-50 flex items-center">
-    <div class="relative w-full h-1 bg-zinc-800 overflow-hidden">
+    <div class="relative w-full h-1 bg-zinc-200 dark:bg-zinc-800 overflow-hidden">
       <div
-        class="h-full bg-white group-hover/seeker:bg-[#251db9] transition-colors"
+        class="h-full bg-zinc-950 dark:bg-white group-hover/seeker:bg-indigo-600 transition-colors"
         [style.width.%]="(displayTime() / (webPlayer.duration() || 1)) * 100"
       ></div>
     </div>
@@ -25,12 +25,12 @@
       (input)="onSeekInput($event)"
       (change)="onSeekChange($event)"
       class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
-      aria-label="Seek track"
+      [attr.aria-label]="'player.seek' | translate"
       data-testid="player-seek"
     />
 
     <div
-      class="absolute w-3 h-3 bg-white rounded-full shadow-lg scale-0 group-hover/seeker:scale-100 transition-transform pointer-events-none z-40"
+      class="absolute w-3 h-3 bg-zinc-950 dark:bg-white rounded-full shadow-lg scale-0 group-hover/seeker:scale-100 transition-transform pointer-events-none z-40"
       [style.left.%]="(displayTime() / (webPlayer.duration() || 1)) * 100"
       style="transform: translateX(-50%)"
     ></div>
@@ -57,7 +57,7 @@
       <div class="flex flex-col min-w-0">
         <div class="flex items-center gap-2">
           <span
-            class="text-white text-sm font-semibold truncate group-hover/track:text-indigo-400 transition-colors"
+            class="text-zinc-950 dark:text-white text-sm font-semibold truncate group-hover/track:text-indigo-600 dark:group-hover/track:text-indigo-400 transition-colors"
           >
             {{ track.title }}
           </span>
@@ -67,7 +67,7 @@
           ></ng-icon>
         </div>
         <span
-          class="text-zinc-400 text-xs truncate hover:text-white transition-colors cursor-pointer"
+          class="text-zinc-500 dark:text-zinc-400 text-xs truncate hover:text-zinc-950 dark:hover:text-white transition-colors cursor-pointer"
         >
           {{ track.artist }}
         </span>
@@ -79,8 +79,8 @@
     <div class="flex items-center gap-6">
       <button
         (click)="webPlayer.previousTrack()"
-        class="text-zinc-400 hover:text-white transition-all active:scale-90 flex"
-        aria-label="Previous track"
+        class="text-zinc-500 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-all active:scale-90 flex"
+        [attr.aria-label]="'player.prev' | translate"
         data-testid="player-prev"
       >
         <ng-icon name="heroBackward" class="text-xl"></ng-icon>
@@ -88,8 +88,8 @@
 
       <button
         (click)="webPlayer.togglePlay()"
-        class="w-10 h-10 flex items-center justify-center rounded-full bg-white text-black hover:scale-105 active:scale-95 transition-all shadow-md"
-        [aria-label]="webPlayer.isPlaying() ? 'Pause' : 'Play'"
+        class="w-10 h-10 flex items-center justify-center rounded-full bg-zinc-950 dark:bg-white text-white dark:text-black hover:scale-105 active:scale-95 transition-all shadow-md"
+        [attr.aria-label]="(webPlayer.isPlaying() ? 'player.pause' : 'player.play') | translate"
         data-testid="player-play-pause"
       >
         <ng-icon
@@ -100,8 +100,8 @@
 
       <button
         (click)="webPlayer.nextTrack()"
-        class="text-zinc-400 hover:text-white transition-all active:scale-90 flex"
-        aria-label="Next track"
+        class="text-zinc-500 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-all active:scale-90 flex"
+        [attr.aria-label]="'player.next' | translate"
         data-testid="player-next"
       >
         <ng-icon name="heroForward" class="text-xl"></ng-icon>
@@ -112,7 +112,7 @@
       class="hidden md:flex items-center gap-3 w-full max-w-xs text-[10px] font-mono text-zinc-500"
     >
       <span class="w-10 text-right">{{ webPlayer.currentTime() | formatDuration }}</span>
-      <div class="grow h-px bg-zinc-800"></div>
+      <div class="grow h-px bg-zinc-200 dark:bg-zinc-800"></div>
       <span class="w-10">{{ webPlayer.duration() | formatDuration }}</span>
     </div>
   </div>
@@ -121,8 +121,8 @@
     <div class="hidden md:flex items-center gap-3">
       <button
         (click)="toggleMute()"
-        class="text-zinc-400 hover:text-white transition-colors flex self-center"
-        aria-label="Mute/Unmute"
+        class="text-zinc-500 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-white transition-colors flex self-center"
+        [attr.aria-label]="(webPlayer.volume() === 0 ? 'player.unmute' : 'player.mute') | translate"
         data-testid="player-mute"
       >
         <ng-icon
@@ -131,9 +131,9 @@
         ></ng-icon>
       </button>
       <div class="relative w-24 h-4 group/volume flex items-center">
-        <div class="relative w-full h-1 bg-zinc-800 rounded-full overflow-hidden">
+        <div class="relative w-full h-1 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
           <div
-            class="h-full bg-zinc-400 group-hover/vol-container:bg-[#1db954] transition-colors rounded-full"
+            class="h-full bg-zinc-500 dark:bg-zinc-400 group-hover/vol-container:bg-indigo-600 dark:group-hover/vol-container:bg-[#1db954] transition-colors rounded-full"
             [style.width.%]="webPlayer.volume() * 100"
           ></div>
         </div>
@@ -146,12 +146,12 @@
           [value]="webPlayer.volume()"
           (input)="onVolumeChange($event)"
           class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
-          aria-label="Volume"
+          [attr.aria-label]="'player.volume' | translate"
           data-testid="player-volume"
         />
 
         <div
-          class="absolute w-3 h-3 bg-white rounded-full shadow-lg scale-0 group-hover/volume:scale-100 transition-transform pointer-events-none z-40"
+          class="absolute w-3 h-3 bg-zinc-950 dark:bg-white rounded-full shadow-lg transition-transform pointer-events-none z-40"
           [style.left.%]="webPlayer.volume() * 100"
           style="transform: translateX(-50%)"
         ></div>

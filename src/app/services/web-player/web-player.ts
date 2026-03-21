@@ -115,12 +115,10 @@ export class WebPlayer {
    */
   nextTrack(): void {
     const queue = this.queue();
-    const currentTrack = this.currentTrack();
-    if (currentTrack) {
-      const currentIndex = queue.findIndex((track) => track.id === currentTrack.id);
-      if (currentIndex < queue.length - 1) {
-        this.playTrack(queue[currentIndex + 1]);
-      }
+    const index = queue.findIndex((t) => t.id === this.currentTrack()?.id);
+
+    if (index !== -1) {
+      this.playTrack(queue[(index + 1) % queue.length]);
     }
   }
 
@@ -129,12 +127,10 @@ export class WebPlayer {
    */
   previousTrack(): void {
     const queue = this.queue();
-    const currentTrack = this.currentTrack();
-    if (currentTrack) {
-      const currentIndex = queue.findIndex((track) => track.id === currentTrack.id);
-      if (currentIndex > 0) {
-        this.playTrack(queue[currentIndex - 1]);
-      }
+    const index = queue.findIndex((t) => t.id === this.currentTrack()?.id);
+
+    if (index !== -1) {
+      this.playTrack(queue[(index - 1 + queue.length) % queue.length]);
     }
   }
 

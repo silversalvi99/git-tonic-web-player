@@ -4,6 +4,8 @@ async function mockAudio(page: import('@playwright/test').Page) {
   await page.addInitScript(() => {
     window.Audio.prototype.play = () => Promise.resolve();
     window.Audio.prototype.pause = () => {};
+    // Force English language for tests
+    localStorage.setItem('gin_tonic_settings', JSON.stringify({ language: 'en' }));
   });
 }
 
@@ -136,7 +138,6 @@ test.describe('Home Page - Desktop View', () => {
   });
 
   test('should control volume', async ({ page }) => {
-    // 1. Play a track to show player
     await page.locator('app-track-item').first().click();
 
     const volumeSlider = page.getByTestId('player-volume');
@@ -144,13 +145,19 @@ test.describe('Home Page - Desktop View', () => {
 
     await expect(muteButton).toBeVisible();
 
-    await volumeSlider.fill('0.2');
+    await volumeSlider.evaluate((el: HTMLInputElement) => {
+      el.value = '0.2';
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    });
     await expect(volumeSlider).toHaveValue('0.2');
 
     await muteButton.click();
     await expect(volumeSlider).toHaveValue('0');
 
     await muteButton.click();
+
+    await expect(volumeSlider).not.toHaveValue('0');
     await expect(volumeSlider).toHaveValue('1');
   });
 
@@ -247,9 +254,10 @@ test.describe('Home Page - Mobile View', () => {
   test('should render a track in the list', async ({ page }) => {
     const trackItem = page.locator('app-track-item').first();
     await expect(trackItem).toBeVisible({ timeout: 15000 });
-    // Use a more relaxed check for text content as it might have extra markup
-    const text = await trackItem.locator('span.text-white').first().textContent();
-    expect(text?.trim()).toContain('A Very Long Test Track Title');
+    await expect(trackItem.locator('span.truncate').first()).toContainText(
+      'A Very Long Test Track Title',
+      { ignoreCase: true },
+    );
   });
 
   test('should show duration in track list', async ({ page }) => {

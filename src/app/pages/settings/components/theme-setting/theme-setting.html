@@ -1,0 +1,26 @@
+<section
+  class="bg-zinc-100 dark:bg-zinc-900/50 rounded-2xl p-6 border border-zinc-200 dark:border-white/5 transition-colors"
+>
+  <div class="flex items-center gap-3 mb-6">
+    <ng-icon name="heroSun" class="text-2xl text-indigo-500"></ng-icon>
+    <h2 class="text-xl font-medium text-zinc-950 dark:text-white">
+      {{ 'themeSectionTitle' | translate }}
+    </h2>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    @for (theme of themes(); track theme.value) {
+      <button
+        (click)="onThemeChange(theme.value)"
+        [class.ring-2]="currentSettings().theme === theme.value"
+        [class.ring-indigo-500]="currentSettings().theme === theme.value"
+        class="flex flex-col items-center gap-3 p-4 rounded-xl border border-zinc-200 dark:border-white/10 bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 transition-all cursor-pointer"
+      >
+        <ng-icon [name]="theme.icon" class="text-2xl text-zinc-600 dark:text-zinc-400"></ng-icon>
+        <span class="text-sm font-medium text-zinc-950 dark:text-white">{{
+          theme.label | translate
+        }}</span>
+      </button>
+    }
+  </div>
+</section>

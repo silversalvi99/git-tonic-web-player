@@ -9,7 +9,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test --watch=false",
     "prepare": "husky",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "playwright-tests": "npm run build && npx playwright test",
+    "playwright-tests-ui": "npm run build && npx playwright test --ui"
   },
   "prettier": {
     "printWidth": 100,

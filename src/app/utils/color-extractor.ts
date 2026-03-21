@@ -43,7 +43,7 @@ export class ColorExtractor {
           colors.push(`rgb(${r}, ${g}, ${b})`);
         });
 
-        // Calculate luminance of the primary color
+        // Calculate luminance of the primary color (top-left for background mapping)
         const r = imageData[points[0]];
         const g = imageData[points[0] + 1];
         const b = imageData[points[0] + 2];

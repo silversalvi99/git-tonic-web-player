@@ -1,7 +1,7 @@
 @if (tracks().hasValue()) {
   <div class="w-full select-none">
     <div
-      class="grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-2 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold border-b border-white/5 mb-4"
+      class="grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-2 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold border-b border-zinc-200 dark:border-white/5 mb-4"
     >
       <span>{{ 'tracks.title' | translate }}</span>
       <span class="hidden md:block">{{ 'tracks.album' | translate }}</span>
@@ -21,7 +21,7 @@
 } @else if (tracks().isLoading()) {
   <div class="w-full select-none">
     <div
-      class="grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-2 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold border-b border-white/5 mb-4"
+      class="grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-2 text-zinc-500 text-[10px] uppercase tracking-[0.2em] font-bold border-b border-zinc-200 dark:border-white/5 mb-4"
     >
       <span>{{ 'tracks.title' | translate }}</span>
       <span class="hidden md:block">{{ 'tracks.album' | translate }}</span>
@@ -34,14 +34,16 @@
           class="grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-3 rounded-xl items-center"
         >
           <div class="flex items-center gap-4 min-w-0">
-            <div class="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-zinc-800 shrink-0"></div>
+            <div
+              class="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-zinc-200 dark:bg-zinc-800 shrink-0"
+            ></div>
             <div class="flex flex-col min-w-0 space-y-2 flex-1">
-              <div class="h-4 bg-zinc-800 rounded w-2/3 md:w-24"></div>
-              <div class="h-3 bg-zinc-800 rounded w-1/2 md:w-16"></div>
+              <div class="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-2/3 md:w-24"></div>
+              <div class="h-3 bg-zinc-200 dark:bg-zinc-800 rounded w-1/2 md:w-16"></div>
             </div>
           </div>
-          <div class="h-4 bg-zinc-800 rounded w-3/4 hidden md:block"></div>
-          <div class="h-4 bg-zinc-800 rounded w-10 ml-auto"></div>
+          <div class="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-3/4 hidden md:block"></div>
+          <div class="h-4 bg-zinc-200 dark:bg-zinc-800 rounded w-10 ml-auto"></div>
         </div>
       }
     </div>

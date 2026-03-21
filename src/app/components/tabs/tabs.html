@@ -1,10 +1,10 @@
 <nav
-  class="flex justify-around items-center h-16 bg-zinc-950/80 backdrop-blur-lg border-t border-zinc-900 px-4"
+  class="flex justify-around items-center h-16 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-lg border-t border-zinc-200 dark:border-zinc-900 px-4"
 >
   @for (item of menuItems(); track item.route) {
     <a
       [routerLink]="item.route"
-      routerLinkActive="text-white"
+      routerLinkActive="text-zinc-950 dark:text-white"
       [routerLinkActiveOptions]="{ exact: true }"
       class="flex flex-col items-center justify-center space-y-1 group w-full text-zinc-500 transition-colors"
     >

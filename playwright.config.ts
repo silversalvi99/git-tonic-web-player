@@ -29,7 +29,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npx http-server dist/gin-tonic-web-player/browser -p 4200',
+    command: 'npx http-server dist/gin-tonic-web-player/browser -p 4200 -P http://localhost:4200?',
     port: 4200,
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',

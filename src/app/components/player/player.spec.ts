@@ -5,6 +5,7 @@ import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { MiniPlayer } from './components/mini-player/mini-player';
 import { ExpandedPlayer } from './components/expanded-player/expanded-player';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('PlayerComponent Orchestration', () => {
   let component: PlayerComponent;
@@ -31,7 +32,7 @@ describe('PlayerComponent Orchestration', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [PlayerComponent],
+      imports: [PlayerComponent, TranslateModule.forRoot()],
       providers: [
         provideZonelessChangeDetection(),
         { provide: PlayerService, useValue: mockPlayerService },

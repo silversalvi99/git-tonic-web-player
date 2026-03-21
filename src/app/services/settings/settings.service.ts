@@ -2,21 +2,24 @@ import { Injectable, signal, effect, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 export type AppLanguage = 'it' | 'en' | 'es';
+export type AppTheme = 'light' | 'dark' | 'system';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SettingsService {
+  /** Storage key */
   private readonly STORAGE_KEY = 'gin_tonic_settings';
+  /** Translate service */
   private readonly translate = inject(TranslateService);
 
-  // Extensible settings object
+  /** Settings */
   readonly settings = signal({
     language: this.getInitialLanguage(),
+    theme: this.getInitialTheme(),
   });
 
   constructor() {
-    this.translate.setDefaultLang('it');
     this.translate.use(this.settings().language);
 
     // Persist changes to localStorage and update translation service
@@ -26,6 +29,10 @@ export class SettingsService {
     });
   }
 
+  /**
+   * Get initial language
+   * @returns Initial language
+   */
   private getInitialLanguage(): AppLanguage {
     const stored = localStorage.getItem(this.STORAGE_KEY);
     if (stored) {
@@ -43,7 +50,36 @@ export class SettingsService {
     return 'it';
   }
 
+  /**
+   * Get initial theme
+   * @returns Initial theme
+   */
+  private getInitialTheme(): AppTheme {
+    const stored = localStorage.getItem(this.STORAGE_KEY);
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        if (parsed.theme) return parsed.theme;
+      } catch (e) {
+        console.error('Error parsing theme from localStorage', e);
+      }
+    }
+    return 'dark'; // Default to dark
+  }
+
+  /**
+   * Update language
+   * @param lang Language to set
+   */
   updateLanguage(lang: AppLanguage) {
     this.settings.update((s) => ({ ...s, language: lang }));
+  }
+
+  /**
+   * Update theme
+   * @param theme Theme to set
+   */
+  updateTheme(theme: AppTheme) {
+    this.settings.update((s) => ({ ...s, theme }));
   }
 }

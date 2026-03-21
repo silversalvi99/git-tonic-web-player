@@ -13,13 +13,13 @@
     ></div>
     <div
       class="blob blob-2 absolute w-[50vh] h-[50vh] rounded-full blur-[90px]"
-      [style.background]="currentColors()[1]"
-      [style.--color]="currentColors()[1]"
+      [style.background]="currentColors()[2]"
+      [style.--color]="currentColors()[2]"
     ></div>
     <div
       class="blob blob-3 absolute w-[70vh] h-[70vh] rounded-full blur-[100px]"
-      [style.background]="currentColors()[2]"
-      [style.--color]="currentColors()[2]"
+      [style.background]="currentColors()[1]"
+      [style.--color]="currentColors()[1]"
     ></div>
   </div>
 
@@ -31,18 +31,18 @@
     <button
       (click)="toggleClose.emit()"
       class="p-2 hover:bg-black/10 rounded-full transition-colors"
-      aria-label="Close"
+      [attr.aria-label]="'player.close' | translate"
       data-testid="expanded-player-close"
     >
       <ng-icon name="heroChevronDown" class="text-3xl"></ng-icon>
     </button>
     <div class="flex flex-col items-center">
-      <span class="text-[10px] uppercase tracking-widest font-bold opacity-70"
-        >Riproducendo da</span
-      >
-      <span class="text-xs font-semibold">{{
-        webPlayer.currentTrack()?.album || 'Gin Tonic Web Player'
-      }}</span>
+      <span class="text-[10px] uppercase tracking-widest font-bold opacity-90">
+        {{ 'player.playingFrom' | translate }}
+      </span>
+      <span class="text-xs font-semibold">
+        {{ webPlayer.currentTrack()?.album || ('player.unknownAlbum' | translate) }}
+      </span>
     </div>
     <div class="w-10"></div>
     <!-- Spacer for centering -->
@@ -93,8 +93,9 @@
             [class.bg-black/10]="isLightBackground()"
           >
             <div
-              class="h-full bg-white group-hover/exp-seeker:bg-[#251db9] transition-colors"
+              class="h-full bg-white transition-colors"
               [class.bg-zinc-950]="isLightBackground()"
+              [style.background]="currentColors()[1]"
               [style.width.%]="(displayTime() / (webPlayer.duration() || 1)) * 100"
             ></div>
           </div>
@@ -106,12 +107,13 @@
             (input)="onSeekInput($event)"
             (change)="onSeekChange($event)"
             class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
-            aria-label="Seek track"
+            [attr.aria-label]="'player.seek' | translate"
             data-testid="player-seek"
           />
           <div
             class="absolute w-4 h-4 bg-white rounded-full shadow-xl scale-0 group-hover/exp-seeker:scale-100 transition-transform pointer-events-none z-40"
             [class.bg-zinc-950]="isLightBackground()"
+            [style.background]="currentColors()[1]"
             [style.left.%]="(displayTime() / (webPlayer.duration() || 1)) * 100"
             style="transform: translateX(-50%)"
           ></div>
@@ -119,7 +121,7 @@
         <div
           class="flex justify-between text-xs font-mono tracking-wider"
           [class.text-zinc-950]="isLightBackground()"
-          [class.text-white/50]="!isLightBackground()"
+          [class.text-white]="!isLightBackground()"
         >
           <span>{{ webPlayer.currentTime() | formatDuration }}</span>
           <span>{{ webPlayer.duration() | formatDuration }}</span>
@@ -130,8 +132,12 @@
       <div class="flex items-center justify-center gap-12 px-4 md:px-0">
         <button
           (click)="webPlayer.previousTrack()"
-          class="text-white/70 hover:text-white transition-all active:scale-90"
-          aria-label="Previous track"
+          class="transition-all active:scale-90"
+          [class.text-white]="!isLightBackground()"
+          [class.hover:text-white/80]="!isLightBackground()"
+          [class.text-zinc-950]="isLightBackground()"
+          [class.hover:text-zinc-800]="isLightBackground()"
+          [attr.aria-label]="'player.prev' | translate"
           data-testid="player-prev"
         >
           <ng-icon name="heroBackward" class="text-4xl"></ng-icon>
@@ -139,8 +145,12 @@
 
         <button
           (click)="webPlayer.togglePlay()"
-          class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full bg-white text-black hover:scale-110 active:scale-95 transition-all shadow-xl"
-          [aria-label]="webPlayer.isPlaying() ? 'Pause' : 'Play'"
+          class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all shadow-xl"
+          [class.bg-white]="!isLightBackground()"
+          [class.text-black]="!isLightBackground()"
+          [class.bg-zinc-950]="isLightBackground()"
+          [class.text-white]="isLightBackground()"
+          [attr.aria-label]="(webPlayer.isPlaying() ? 'player.pause' : 'player.play') | translate"
           data-testid="player-play-pause"
         >
           <ng-icon
@@ -151,8 +161,12 @@
 
         <button
           (click)="webPlayer.nextTrack()"
-          class="text-white/70 hover:text-white transition-all active:scale-90"
-          aria-label="Next track"
+          class="transition-all active:scale-90"
+          [class.text-white]="!isLightBackground()"
+          [class.hover:text-white/80]="!isLightBackground()"
+          [class.text-zinc-950]="isLightBackground()"
+          [class.hover:text-zinc-800]="isLightBackground()"
+          [attr.aria-label]="'player.next' | translate"
           data-testid="player-next"
         >
           <ng-icon name="heroForward" class="text-4xl"></ng-icon>
@@ -162,14 +176,21 @@
       <!-- Volume Row -->
       <div
         class="flex items-center gap-4 px-4 md:px-0 transition-opacity"
-        [class.opacity-60]="!isLightBackground()"
-        [class.hover:opacity-100]="!isLightBackground()"
         [class.text-zinc-950]="isLightBackground()"
+        [class.text-white]="!isLightBackground()"
       >
-        <ng-icon
-          [name]="webPlayer.volume() === 0 ? 'heroSpeakerXMark' : 'heroSpeakerWave'"
-          class="text-xl"
-        ></ng-icon>
+        <button
+          (click)="toggleMute()"
+          class="hover:scale-110 active:scale-95 transition-transform flex items-center"
+          [attr.aria-label]="
+            (webPlayer.volume() === 0 ? 'player.unmute' : 'player.mute') | translate
+          "
+        >
+          <ng-icon
+            [name]="webPlayer.volume() === 0 ? 'heroSpeakerXMark' : 'heroSpeakerWave'"
+            class="text-xl"
+          ></ng-icon>
+        </button>
         <div class="relative grow h-8 flex items-center group/exp-vol">
           <div
             class="relative w-full h-1 bg-white/20 rounded-full overflow-hidden"
@@ -178,6 +199,7 @@
             <div
               class="h-full bg-white rounded-full transition-colors"
               [class.bg-zinc-950]="isLightBackground()"
+              [style.background]="currentColors()[2]"
               [style.width.%]="webPlayer.volume() * 100"
             ></div>
           </div>
@@ -189,9 +211,14 @@
             [value]="webPlayer.volume()"
             (input)="onVolumeChange($event)"
             class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-30"
-            aria-label="Volume"
+            [attr.aria-label]="'player.volume' | translate"
             data-testid="player-volume"
           />
+          <div
+            class="absolute w-3 h-3 bg-white rounded-full shadow-lg transition-transform pointer-events-none z-40"
+            [style.left.%]="webPlayer.volume() * 100"
+            style="transform: translateX(-50%)"
+          ></div>
         </div>
       </div>
     </div>

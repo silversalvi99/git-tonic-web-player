@@ -12,11 +12,12 @@ import {
 } from '@ng-icons/heroicons/outline';
 import { WebPlayer as PlayerService } from '../../../../services/web-player/web-player';
 import { FormatDurationPipe } from '../../../../pipes/format-duration-pipe';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-expanded-player',
   standalone: true,
-  imports: [CommonModule, FormatDurationPipe, NgIcon],
+  imports: [CommonModule, FormatDurationPipe, NgIcon, TranslateModule],
   providers: [
     provideIcons({
       heroBackward,
@@ -43,6 +44,8 @@ export class ExpandedPlayer {
   /** Output to notify parent to toggle open mode */
   toggleClose = output<void>();
 
+  /** Signal to store the previous volume before muting */
+  private readonly lastVolume = signal(1);
   /** Signal to track if the user is dragging the seek bar */
   private readonly isDragging = signal(false);
   /** Signal to store the temporary seek value during drag */
@@ -51,6 +54,16 @@ export class ExpandedPlayer {
   /** Computed signal that returns the current time to display (real or dragged) */
   protected readonly displayTime = computed(() => {
     return this.isDragging() ? this.dragValue() : this.webPlayer.currentTime();
+  });
+
+  /** Computed signal that returns if disable or not next tracks */
+  protected readonly disableNextTrack = computed(() => {
+    return this.webPlayer.queue().length <= 1;
+  });
+
+  /** Computed signal that returns if disable or not previous tracks */
+  protected readonly disablePreviousTrack = computed(() => {
+    return this.webPlayer.queue().length <= 1;
   });
 
   /**
@@ -82,5 +95,13 @@ export class ExpandedPlayer {
   onVolumeChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.webPlayer.setVolume(parseFloat(target.value));
+  }
+
+  /**
+   * Toggle mute/unmute
+   */
+  toggleMute(): void {
+    const currentVolume = this.webPlayer.volume();
+    this.webPlayer.setVolume(currentVolume > 0 ? 0 : 1);
   }
 }

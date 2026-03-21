@@ -4,6 +4,7 @@ import { WebPlayer as PlayerService } from '../../../../services/web-player/web-
 import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { Track } from '../../../../models/track.model';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('MiniPlayerComponent', () => {
   let component: MiniPlayerComponent;
@@ -35,7 +36,7 @@ describe('MiniPlayerComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [MiniPlayerComponent],
+      imports: [MiniPlayerComponent, TranslateModule.forRoot()],
       providers: [
         provideZonelessChangeDetection(),
         { provide: PlayerService, useValue: mockPlayerService },
@@ -87,7 +88,7 @@ describe('MiniPlayerComponent', () => {
 
   it('should toggle mute', () => {
     const muteBtn = fixture.nativeElement.querySelector(
-      'button[aria-label="Mute/Unmute"]',
+      '[data-testid="player-mute"]',
     ) as HTMLButtonElement;
 
     muteBtn.click();

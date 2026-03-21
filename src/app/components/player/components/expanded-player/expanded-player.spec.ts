@@ -4,6 +4,7 @@ import { WebPlayer as PlayerService } from '../../../../services/web-player/web-
 import { signal, provideZonelessChangeDetection } from '@angular/core';
 import { Track } from '../../../../models/track.model';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('ExpandedPlayerComponent', () => {
   let component: ExpandedPlayerComponent;
@@ -35,7 +36,7 @@ describe('ExpandedPlayerComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ExpandedPlayerComponent],
+      imports: [ExpandedPlayerComponent, TranslateModule.forRoot()],
       providers: [
         provideZonelessChangeDetection(),
         { provide: PlayerService, useValue: mockPlayerService },

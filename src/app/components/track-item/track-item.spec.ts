@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TrackItem } from './track-item';
 import { WebPlayer } from '../../services/web-player/web-player';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
+import { signal } from '@angular/core';
 
 describe('TrackItemComponent', () => {
   let component: TrackItem;
@@ -11,6 +12,7 @@ describe('TrackItemComponent', () => {
   beforeEach(async () => {
     playerServiceSpy = {
       playTrack: vi.fn(),
+      currentTrack: signal(null),
     };
 
     await TestBed.configureTestingModule({

@@ -1,20 +1,25 @@
 <div
-  class="group grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all duration-200 items-center"
+  class="group grid grid-cols-[1fr_60px] md:grid-cols-[4fr_3fr_100px] gap-4 px-4 py-3 rounded-xl hover:bg-zinc-100 dark:hover:bg-white/5 transition-all duration-200 items-center"
   (click)="onItemClick()"
+  [class.bg-zinc-200/50]="isCurrentTrack()"
+  [class.dark:bg-white/10]="isCurrentTrack()"
 >
   <div class="flex items-center gap-4 min-w-0 overflow-hidden">
     <img
       [src]="track().coverThumb"
-      class="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover shadow-lg bg-zinc-900 shrink-0"
+      class="w-10 h-10 md:w-12 md:h-12 rounded-lg object-cover shadow-lg bg-zinc-200 dark:bg-zinc-900 shrink-0"
       alt="cover"
     />
     <div class="flex flex-col min-w-0 flex-1">
-      <span class="text-white font-bold truncate tracking-tight text-sm md:text-base">
+      <span
+        class="text-zinc-950 dark:text-white font-bold truncate tracking-tight text-sm md:text-base"
+      >
         {{ track().title }}
       </span>
-      <span class="text-zinc-400 text-xs md:text-sm font-medium truncate opacity-90">{{
-        track().artist
-      }}</span>
+      <span
+        class="text-zinc-500 dark:text-zinc-400 text-xs md:text-sm font-medium truncate opacity-90"
+        >{{ track().artist }}</span
+      >
     </div>
   </div>
 
