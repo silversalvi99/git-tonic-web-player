@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.1.0...v1.2.0) (2026-03-21)
+
+### Features
+
+- added theme support, improved UI and minor fixes ([c2137ac](https://github.com/silversalvi99/git-tonic-web-player/commit/c2137ac6b68c37c64d3b3d206750dc7fde22fc15))
+
 # [1.1.0](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.0.0...v1.1.0) (2026-03-20)
 
 ### Features
