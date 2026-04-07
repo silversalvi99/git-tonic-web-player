@@ -1,6 +1,5 @@
-import { HttpClient, httpResource } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { httpResource } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { NavidromeConfig } from '../../models/navidrome-config.model';
 
 @Injectable({

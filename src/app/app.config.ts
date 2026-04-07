@@ -30,7 +30,6 @@ export const appConfig: ApplicationConfig = {
     }),
     provideAppInitializer(() => {
       const navidromConfigResource = inject(Config).navidromeConfigResource;
-
       return toObservable(navidromConfigResource.isLoading).pipe(
         filter((loading) => loading === false),
         first(),
@@ -44,7 +43,10 @@ export const appConfig: ApplicationConfig = {
       },
       initOptions: {
         onLoad: 'check-sso',
-        silentCheckSsoRedirectUri: window.location.origin + '/assets/silent-check-sso.html',
+        silentCheckSsoRedirectUri:
+          window.location.origin +
+          (window.location.pathname.startsWith('/player') ? '/player' : '') +
+          '/assets/silent-check-sso.html',
         checkLoginIframe: false,
       },
       features: [withAutoRefreshToken()],
