@@ -1,3 +1,9 @@
+# [1.3.0](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.2.0...v1.3.0) (2026-04-07)
+
+### Features
+
+- implement keyclock auth and resolved minor fixes ([5835150](https://github.com/silversalvi99/git-tonic-web-player/commit/5835150a8a708ecc617c4fe254b93882ccea70e9))
+
 # [1.2.0](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.1.0...v1.2.0) (2026-03-21)
 
 ### Features
