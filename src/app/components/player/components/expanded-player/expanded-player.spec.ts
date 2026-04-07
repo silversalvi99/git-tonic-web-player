@@ -28,6 +28,7 @@ describe('ExpandedPlayerComponent', () => {
       duration: signal(240),
       volume: signal(0.8),
       isSeeking: signal(false),
+      queue: signal<Track[]>([]),
       previousTrack: vi.fn(),
       nextTrack: vi.fn(),
       togglePlay: vi.fn(),
@@ -48,7 +49,6 @@ describe('ExpandedPlayerComponent', () => {
 
     // Set required inputs
     fixture.componentRef.setInput('currentColors', ['#111', '#222', '#333']);
-    fixture.componentRef.setInput('isLightBackground', false);
     fixture.componentRef.setInput('isClosing', false);
 
     fixture.detectChanges();
@@ -65,29 +65,8 @@ describe('ExpandedPlayerComponent', () => {
     expect(
       compiled.querySelector('[data-testid="expanded-player-title"]')?.textContent?.trim(),
     ).toBe('Expanded Test Title');
-    // Find the paragraph with data-testid or text content
     const artist = compiled.querySelector('[data-testid="expanded-player-artist"]');
     expect(artist?.textContent?.trim()).toBe('Expanded Test Artist');
-  });
-
-  it('should apply correct color classes for dark background', async () => {
-    await fixture.whenStable();
-    fixture.detectChanges();
-    const title = fixture.nativeElement.querySelector(
-      '[data-testid="expanded-player-title"]',
-    ) as HTMLElement;
-    expect(title.classList.contains('text-zinc-950')).toBe(false);
-  });
-
-  it('should apply correct color classes for light background', async () => {
-    fixture.componentRef.setInput('isLightBackground', true);
-    await fixture.whenStable();
-    fixture.detectChanges();
-
-    const title = fixture.nativeElement.querySelector(
-      '[data-testid="expanded-player-title"]',
-    ) as HTMLElement;
-    expect(title.classList.contains('text-zinc-950')).toBe(true);
   });
 
   it('should emit toggleClose when chevron down button is clicked', () => {
@@ -100,6 +79,10 @@ describe('ExpandedPlayerComponent', () => {
   });
 
   it('should handle large controls correctly', () => {
+    // Mock queue to have tracks otherwise they are disabled
+    mockPlayerService.queue.set([{ id: '1' } as Track, { id: '2' } as Track]);
+    fixture.detectChanges();
+
     const prevBtn = fixture.nativeElement.querySelector(
       '[data-testid="player-prev"]',
     ) as HTMLButtonElement;
@@ -119,13 +102,56 @@ describe('ExpandedPlayerComponent', () => {
     expect(mockPlayerService.togglePlay).toHaveBeenCalled();
   });
 
-  it('should handle seeker changes', () => {
+  it('should disable navigation buttons when queue is empty or has only one track', () => {
+    // Case 1: Empty queue
+    mockPlayerService.queue.set([]);
+    fixture.detectChanges();
+
+    const prevBtn = fixture.nativeElement.querySelector(
+      '[data-testid="player-prev"]',
+    ) as HTMLButtonElement;
+    const nextBtn = fixture.nativeElement.querySelector(
+      '[data-testid="player-next"]',
+    ) as HTMLButtonElement;
+
+    expect(prevBtn.disabled).toBe(true);
+    expect(nextBtn.disabled).toBe(true);
+
+    // Case 2: One track
+    mockPlayerService.queue.set([{ id: '1' } as Track]);
+    fixture.detectChanges();
+
+    expect(prevBtn.disabled).toBe(true);
+    expect(nextBtn.disabled).toBe(true);
+
+    // Case 3: Multiple tracks
+    mockPlayerService.queue.set([{ id: '1' } as Track, { id: '2' } as Track]);
+    fixture.detectChanges();
+
+    expect(prevBtn.disabled).toBe(false);
+    expect(nextBtn.disabled).toBe(false);
+  });
+
+  it('should return the correct display time when dragging', () => {
     const seeker = fixture.nativeElement.querySelector(
       '[data-testid="player-seek"]',
     ) as HTMLInputElement;
-    seeker.value = '100';
+
+    // Simulate drag (input event)
+    seeker.value = '50';
+    seeker.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    // Check displayTime indirectly via template if possible, or directly from component
+    // displayTime is protected, but in TS we can access it for testing or check internal state
+    expect((component as any).displayTime()).toBe(50);
+    expect(mockPlayerService.isSeeking()).toBe(true);
+
+    // Simulate end drag (change event)
     seeker.dispatchEvent(new Event('change'));
-    expect(mockPlayerService.seek).toHaveBeenCalledWith(100);
+    fixture.detectChanges();
+
+    expect(mockPlayerService.seek).toHaveBeenCalledWith(50);
   });
 
   it('should handle volume changes', () => {
@@ -135,5 +161,15 @@ describe('ExpandedPlayerComponent', () => {
     volume.value = '0.5';
     volume.dispatchEvent(new Event('input'));
     expect(mockPlayerService.setVolume).toHaveBeenCalledWith(0.5);
+  });
+
+  it('should toggle mute/unmute', () => {
+    mockPlayerService.volume.set(0.8);
+    component.toggleMute();
+    expect(mockPlayerService.setVolume).toHaveBeenCalledWith(0);
+
+    mockPlayerService.volume.set(0);
+    component.toggleMute();
+    expect(mockPlayerService.setVolume).toHaveBeenCalledWith(1);
   });
 });

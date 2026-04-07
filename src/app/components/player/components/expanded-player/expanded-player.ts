@@ -38,7 +38,6 @@ export class ExpandedPlayer {
 
   /** Inputs from parent */
   currentColors = input.required<string[]>();
-  isLightBackground = input.required<boolean>();
   isClosing = input.required<boolean>();
 
   /** Output to notify parent to toggle open mode */

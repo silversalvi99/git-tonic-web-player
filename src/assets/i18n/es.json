@@ -7,6 +7,8 @@
   "themeLight": "Claro",
   "themeDark": "Oscuro",
   "themeSystem": "Sistema",
+  "logoutSectionTitle": "Cuenta",
+  "logoutButton": "Cerrar sesión",
   "sidebar": {
     "home": "Inicio",
     "settings": "Ajustes"

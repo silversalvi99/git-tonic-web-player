@@ -15,8 +15,13 @@ jobs:
     runs-on: self-hosted
     env:
       CI: 'true'
+      E2E_TEST_USERNAME: ${{ secrets.E2E_TEST_USERNAME }}
+      E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+      API_DOMAIN: ${{ secrets.KEYCLOAK_API_DOMAIN }}
+      KEYCLOAK_REALM: ${{ secrets.KEYCLOAK_REALM }}
+      KEYCLOAK_CLIENT_ID: ${{ secrets.KEYCLOAK_CLIENT_ID }}
     container:
-      image: mcr.microsoft.com/playwright:v1.58.2-jammy
+      image: mcr.microsoft.com/playwright:v1.59.1-jammy
       options: --network gin-network
 
     steps:
@@ -34,7 +39,12 @@ jobs:
       - name: Build Angular App
         run: npm run build
 
-      - name: Inject Secret Config into Build Result
+      - name: Install Utilities
+        run: |
+          apt-get update
+          apt-get install -y gettext
+
+      - name: Inject Secret Config & Generate env.js
         env:
           PRIVATE_CONFIG: ${{ secrets.NAVIDROME_CONFIG_JSON }}
         run: |
@@ -45,10 +55,13 @@ jobs:
           mkdir -p "$TARGET_DIR/assets"
           echo "$PRIVATE_CONFIG" > "$TARGET_DIR/assets/config.json"
 
-          if [ -f "$TARGET_DIR/assets/config.json" ]; then
-            echo "✅ config.json loaded in $TARGET_DIR/assets/"
+          # Genera env.js usando envsubst per configurare Keycloak
+          envsubst < src/assets/env.template.js > "$TARGET_DIR/assets/env.js"
+
+          if [ -f "$TARGET_DIR/assets/config.json" ] && [ -f "$TARGET_DIR/assets/env.js" ]; then
+            echo "✅ Configuration files loaded successfully in $TARGET_DIR/assets/"
           else
-            echo "❌ Error: Impossible to create config.json"
+            echo "❌ Error: Impossible to create config files"
             exit 1
           fi
 

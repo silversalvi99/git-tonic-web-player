@@ -1,0 +1,21 @@
+<section
+  class="bg-zinc-100 dark:bg-zinc-900/50 rounded-2xl p-6 border border-zinc-200 dark:border-white/5 transition-colors"
+>
+  <div class="flex items-center gap-3 mb-6">
+    <ng-icon name="heroArrowLeftStartOnRectangle" class="text-2xl text-red-500"></ng-icon>
+    <h2 class="text-xl font-medium text-zinc-950 dark:text-white">
+      {{ 'logoutSectionTitle' | translate }}
+    </h2>
+  </div>
+
+  <div class="flex flex-col gap-4">
+    <button
+      (click)="onLogout()"
+      data-testid="logout-button"
+      class="w-full sm:w-auto px-6 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-medium transition-all shadow-lg shadow-red-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-95"
+    >
+      <ng-icon name="heroArrowLeftStartOnRectangle" class="text-xl"></ng-icon>
+      {{ 'logoutButton' | translate }}
+    </button>
+  </div>
+</section>

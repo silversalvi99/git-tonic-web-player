@@ -1,11 +1,11 @@
 <div
   class="open-mode-overlay fixed inset-0 z-200 flex flex-col items-center justify-between p-4 md:p-12 overflow-hidden bg-black text-white"
   [class.closing]="isClosing()"
-  [style.background]="'linear-gradient(to bottom, ' + currentColors()[0] + ' 0%, #000 100%)'"
+  [style.background]="'linear-gradient(to bottom, ' + currentColors()[0] + ' -30%, #000 70%)'"
   data-testid="expanded-player-overlay"
 >
   <!-- Ambient Background -->
-  <div class="ambient-bg absolute inset-0 -z-10 pointer-events-none opacity-60">
+  <div class="ambient-bg absolute inset-0 -z-10 pointer-events-none opacity-30">
     <div
       class="blob blob-1 absolute w-[60vh] h-[60vh] rounded-full blur-[80px]"
       [style.background]="currentColors()[0]"
@@ -24,13 +24,10 @@
   </div>
 
   <!-- Header / Close button -->
-  <div
-    class="w-full flex justify-between items-center mb-4 md:mb-0"
-    [class.text-zinc-950]="isLightBackground()"
-  >
+  <div class="w-full flex justify-between items-center mb-4 md:mb-0 text-white">
     <button
       (click)="toggleClose.emit()"
-      class="p-2 hover:bg-black/10 rounded-full transition-colors"
+      class="p-2 hover:bg-white/10 rounded-full transition-colors"
       [attr.aria-label]="'player.close' | translate"
       data-testid="expanded-player-close"
     >
@@ -69,16 +66,13 @@
     <div class="flex flex-col w-full md:w-[450px] gap-8 md:gap-12">
       <div class="flex flex-col gap-2 text-center md:text-left">
         <h2
-          class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight"
-          [class.text-zinc-950]="isLightBackground()"
+          class="text-3xl md:text-5xl font-extrabold tracking-tight leading-tight text-white"
           data-testid="expanded-player-title"
         >
           {{ webPlayer.currentTrack()?.title }}
         </h2>
         <p
-          class="text-xl md:text-2xl font-medium"
-          [class.text-zinc-800]="isLightBackground()"
-          [class.text-white/70]="!isLightBackground()"
+          class="text-xl md:text-2xl font-medium text-white/70"
           data-testid="expanded-player-artist"
         >
           {{ webPlayer.currentTrack()?.artist }}
@@ -88,13 +82,9 @@
       <!-- Expanded Seeker -->
       <div class="flex flex-col gap-2">
         <div class="relative w-full h-8 flex items-center group/exp-seeker">
-          <div
-            class="relative w-full h-1.5 bg-white/10 rounded-full overflow-hidden"
-            [class.bg-black/10]="isLightBackground()"
-          >
+          <div class="relative w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
             <div
               class="h-full bg-white transition-colors"
-              [class.bg-zinc-950]="isLightBackground()"
               [style.background]="currentColors()[1]"
               [style.width.%]="(displayTime() / (webPlayer.duration() || 1)) * 100"
             ></div>
@@ -112,17 +102,12 @@
           />
           <div
             class="absolute w-4 h-4 bg-white rounded-full shadow-xl scale-0 group-hover/exp-seeker:scale-100 transition-transform pointer-events-none z-40"
-            [class.bg-zinc-950]="isLightBackground()"
             [style.background]="currentColors()[1]"
             [style.left.%]="(displayTime() / (webPlayer.duration() || 1)) * 100"
             style="transform: translateX(-50%)"
           ></div>
         </div>
-        <div
-          class="flex justify-between text-xs font-mono tracking-wider"
-          [class.text-zinc-950]="isLightBackground()"
-          [class.text-white]="!isLightBackground()"
-        >
+        <div class="flex justify-between text-xs font-mono tracking-wider text-white/60">
           <span>{{ webPlayer.currentTime() | formatDuration }}</span>
           <span>{{ webPlayer.duration() | formatDuration }}</span>
         </div>
@@ -132,11 +117,8 @@
       <div class="flex items-center justify-center gap-12 px-4 md:px-0">
         <button
           (click)="webPlayer.previousTrack()"
-          class="transition-all active:scale-90"
-          [class.text-white]="!isLightBackground()"
-          [class.hover:text-white/80]="!isLightBackground()"
-          [class.text-zinc-950]="isLightBackground()"
-          [class.hover:text-zinc-800]="isLightBackground()"
+          [disabled]="disablePreviousTrack()"
+          class="transition-all active:scale-90 text-white/80 hover:text-white disabled:opacity-30 disabled:pointer-events-none"
           [attr.aria-label]="'player.prev' | translate"
           data-testid="player-prev"
         >
@@ -145,11 +127,7 @@
 
         <button
           (click)="webPlayer.togglePlay()"
-          class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all shadow-xl"
-          [class.bg-white]="!isLightBackground()"
-          [class.text-black]="!isLightBackground()"
-          [class.bg-zinc-950]="isLightBackground()"
-          [class.text-white]="isLightBackground()"
+          class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all shadow-xl bg-white text-black"
           [attr.aria-label]="(webPlayer.isPlaying() ? 'player.pause' : 'player.play') | translate"
           data-testid="player-play-pause"
         >
@@ -161,11 +139,8 @@
 
         <button
           (click)="webPlayer.nextTrack()"
-          class="transition-all active:scale-90"
-          [class.text-white]="!isLightBackground()"
-          [class.hover:text-white/80]="!isLightBackground()"
-          [class.text-zinc-950]="isLightBackground()"
-          [class.hover:text-zinc-800]="isLightBackground()"
+          [disabled]="disableNextTrack()"
+          class="transition-all active:scale-90 text-white/80 hover:text-white disabled:opacity-30 disabled:pointer-events-none"
           [attr.aria-label]="'player.next' | translate"
           data-testid="player-next"
         >
@@ -174,11 +149,7 @@
       </div>
 
       <!-- Volume Row -->
-      <div
-        class="flex items-center gap-4 px-4 md:px-0 transition-opacity"
-        [class.text-zinc-950]="isLightBackground()"
-        [class.text-white]="!isLightBackground()"
-      >
+      <div class="flex items-center gap-4 px-4 md:px-0 transition-opacity text-white">
         <button
           (click)="toggleMute()"
           class="hover:scale-110 active:scale-95 transition-transform flex items-center"
@@ -192,14 +163,9 @@
           ></ng-icon>
         </button>
         <div class="relative grow h-8 flex items-center group/exp-vol">
-          <div
-            class="relative w-full h-1 bg-white/20 rounded-full overflow-hidden"
-            [class.bg-black/10]="isLightBackground()"
-          >
+          <div class="relative w-full h-1 bg-white/10 rounded-full overflow-hidden">
             <div
               class="h-full bg-white rounded-full transition-colors"
-              [class.bg-zinc-950]="isLightBackground()"
-              [style.background]="currentColors()[2]"
               [style.width.%]="webPlayer.volume() * 100"
             ></div>
           </div>

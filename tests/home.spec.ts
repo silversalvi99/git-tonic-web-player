@@ -1,35 +1,23 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, mockRandomSongs } from './fixtures';
 
-async function mockAudio(page: import('@playwright/test').Page) {
-  await page.addInitScript(() => {
-    window.Audio.prototype.play = () => Promise.resolve();
-    window.Audio.prototype.pause = () => {};
-    // Force English language for tests
-    localStorage.setItem('gin_tonic_settings', JSON.stringify({ language: 'en' }));
+async function mockAppConfig(page: import('@playwright/test').Page) {
+  const mockConfig = {
+    navidromeUrl: '/music',
+    baseUrl: '/music',
+    user: 'test-user',
+    token: 'test-token',
+    salt: 'test-salt',
+    version: '1.16.1',
+    clientName: 'test-client',
+  };
+
+  await page.route('**/assets/config.json', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      json: mockConfig,
+    });
   });
-}
-
-async function mockRandomSongs(page: import('@playwright/test').Page, songs: object[] = []) {
-  await page.route(
-    (url) => url.href.includes('getRandomSongs.view'),
-    async (route) => {
-      console.log('MOCKING API CALL TO:', route.request().url());
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify({
-          'subsonic-response': {
-            status: 'ok',
-            version: '1.16.1',
-            randomSongs: {
-              song:
-                songs.length > 0 ? songs : [{ id: '1', title: 'Default Mock', artist: 'Tester' }],
-            },
-          },
-        }),
-      });
-    },
-  );
 }
 
 test.describe('App Initialization', () => {
@@ -37,27 +25,7 @@ test.describe('App Initialization', () => {
     page,
     isMobile,
   }) => {
-    // 1. MockConfig con TUTTE le chiavi possibili (navidromeUrl + baseUrl per sicurezza)
-    const mockConfig = {
-      navidromeUrl: '/music', // Chiave standard
-      baseUrl: '/music', // Tua chiave attuale
-      user: 'test-user',
-      token: 'test-token',
-      salt: 'test-salt',
-      version: '1.16.1',
-      clientName: 'test-client',
-    };
-
-    await mockAudio(page);
-
-    // Mock del config.json
-    await page.route('**/assets/config.json', async (route) => {
-      await route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        json: mockConfig,
-      });
-    });
+    await mockAppConfig(page);
 
     // Mock della risposta API Subsonic
     await page.route('**/music/rest/**', async (route) => {
@@ -107,7 +75,7 @@ test.describe('Home Page - Desktop View', () => {
   test.use({ viewport: { width: 1280, height: 800 } });
 
   test.beforeEach(async ({ page }) => {
-    await mockAudio(page);
+    // mockAudio is now in fixtures.ts
     await mockRandomSongs(page, [
       { id: '1', title: 'Test Track 1', artist: 'Test Artist 1', album: 'Album 1', duration: 180 },
     ]);
@@ -233,7 +201,7 @@ test.describe('Home Page - Mobile View', () => {
   test.use({ viewport: { width: 375, height: 812 } });
 
   test.beforeEach(async ({ page }) => {
-    await mockAudio(page);
+    // mockAudio is now in fixtures.ts
     await mockRandomSongs(page, [
       {
         id: '1',

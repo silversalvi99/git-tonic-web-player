@@ -21,6 +21,7 @@ describe('PlayerComponent Orchestration', () => {
       currentTime: signal(0),
       duration: signal(0),
       volume: signal(1),
+      queue: signal([]),
       playTrack: vi.fn(),
       togglePlay: vi.fn(),
       pause: vi.fn(),

@@ -39,6 +39,8 @@
     "@ng-icons/heroicons": "^33.1.0",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
+    "keycloak-angular": "^21.0.0",
+    "keycloak-js": "^26.2.3",
     "rxjs": "~7.8.0",
     "ts-md5": "^2.0.1",
     "tslib": "^2.3.0"
@@ -52,13 +54,14 @@
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@eslint/js": "^10.0.1",
-    "@playwright/test": "^1.58.2",
+    "@playwright/test": "^1.59.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^13.1.5",
     "@tailwindcss/postcss": "^4.1.12",
     "@types/node": "^25.5.0",
     "angular-eslint": "21.3.0",
+    "dotenv": "^17.4.1",
     "eslint": "^10.0.2",
     "husky": "^9.1.7",
     "jsdom": "^27.1.0",
@@ -73,7 +76,9 @@
     "vitest": "^4.0.8"
   },
   "overrides": {
-    "undici": "^7.24.0"
+    "undici": "^7.24.0",
+    "picomatch": "^4.0.3",
+    "brace-expansion": "^5.0.4"
   },
   "lint-staged": {
     "*.{ts,js,json,md,html,css,scss}": "prettier --write",

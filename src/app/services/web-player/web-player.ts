@@ -45,16 +45,13 @@ export class WebPlayer {
       }
     };
 
-    this._audio.onloadedmetadata = () => {
+    this._audio.onloadedmetadata = (ev) => {
+      console.log(ev);
       this.duration.set(this._audio!.duration);
     };
 
     this._audio.onplay = () => this.isPlaying.set(true);
     this._audio.onpause = () => this.isPlaying.set(false);
-  }
-
-  constructor() {
-    // Audio is initialized lazily when first accessed
   }
 
   /**
@@ -115,10 +112,15 @@ export class WebPlayer {
    */
   nextTrack(): void {
     const queue = this.queue();
+    if (queue.length === 0) return;
+
     const index = queue.findIndex((t) => t.id === this.currentTrack()?.id);
 
     if (index !== -1) {
       this.playTrack(queue[(index + 1) % queue.length]);
+    } else {
+      // If current track is not in queue, start from the first one
+      this.playTrack(queue[0]);
     }
   }
 
@@ -127,10 +129,15 @@ export class WebPlayer {
    */
   previousTrack(): void {
     const queue = this.queue();
+    if (queue.length === 0) return;
+
     const index = queue.findIndex((t) => t.id === this.currentTrack()?.id);
 
     if (index !== -1) {
       this.playTrack(queue[(index - 1 + queue.length) % queue.length]);
+    } else {
+      // If current track is not in queue, start from the last one
+      this.playTrack(queue[queue.length - 1]);
     }
   }
 

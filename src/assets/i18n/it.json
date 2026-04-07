@@ -7,6 +7,8 @@
   "themeLight": "Chiaro",
   "themeDark": "Scuro",
   "themeSystem": "Sistema",
+  "logoutSectionTitle": "Account",
+  "logoutButton": "Esci",
   "sidebar": {
     "home": "Home",
     "settings": "Impostazioni"
