@@ -1,3 +1,9 @@
+## [1.3.1](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.3.0...v1.3.1) (2026-04-07)
+
+### Bug Fixes
+
+- **auth:** keyclock redirect uri ([89631f6](https://github.com/silversalvi99/git-tonic-web-player/commit/89631f66fad2f15172dde178af73a6bfeecac46c))
+
 # [1.3.0](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.2.0...v1.3.0) (2026-04-07)
 
 ### Features
