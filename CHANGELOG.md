@@ -1,3 +1,9 @@
+# [1.4.0](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.3.1...v1.4.0) (2026-04-17)
+
+### Features
+
+- **player:** repeat control, pwa support, UI improvement ([25b6a6d](https://github.com/silversalvi99/git-tonic-web-player/commit/25b6a6ded7bbf52299aa5b3614cc06f14ba35e38))
+
 ## [1.3.1](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.3.0...v1.3.1) (2026-04-07)
 
 ### Bug Fixes
