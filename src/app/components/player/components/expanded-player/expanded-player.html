@@ -82,10 +82,9 @@
       <!-- Expanded Seeker -->
       <div class="flex flex-col gap-2">
         <div class="relative w-full h-8 flex items-center group/exp-seeker">
-          <div class="relative w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+          <div class="relative w-full h-1.5 bg-white/30 rounded-full overflow-hidden">
             <div
               class="h-full bg-white transition-colors"
-              [style.background]="currentColors()[1]"
               [style.width.%]="(displayTime() / (webPlayer.duration() || 1)) * 100"
             ></div>
           </div>
@@ -101,8 +100,7 @@
             data-testid="player-seek"
           />
           <div
-            class="absolute w-4 h-4 bg-white rounded-full shadow-xl scale-0 group-hover/exp-seeker:scale-100 transition-transform pointer-events-none z-40"
-            [style.background]="currentColors()[1]"
+            class="absolute w-4 h-4 bg-white rounded-full shadow-xl scale-100 md:scale-0 md:group-hover/exp-seeker:scale-100 transition-transform pointer-events-none z-40"
             [style.left.%]="(displayTime() / (webPlayer.duration() || 1)) * 100"
             style="transform: translateX(-50%)"
           ></div>
@@ -114,38 +112,66 @@
       </div>
 
       <!-- Main Large Controls -->
-      <div class="flex items-center justify-center gap-12 px-4 md:px-0">
-        <button
-          (click)="webPlayer.previousTrack()"
-          [disabled]="disablePreviousTrack()"
-          class="transition-all active:scale-90 text-white/80 hover:text-white disabled:opacity-30 disabled:pointer-events-none"
-          [attr.aria-label]="'player.prev' | translate"
-          data-testid="player-prev"
-        >
-          <ng-icon name="heroBackward" class="text-4xl"></ng-icon>
-        </button>
+      <div class="grid grid-cols-[80px_1fr_80px] items-center w-full md:px-0">
+        <div class="flex justify-start">
+          <button
+            (click)="webPlayer.toggleRepeatMode()"
+            class="relative transition-all active:scale-95 flex items-center justify-center group/repeat"
+            [class.text-white]="webPlayer.repeatMode() !== 'none'"
+            [class.text-white/30]="webPlayer.repeatMode() === 'none'"
+            [attr.aria-label]="'player.repeat' | translate"
+            data-testid="player-repeat"
+          >
+            <ng-icon name="heroArrowPath" class="text-2xl md:text-3xl"></ng-icon>
+            @if (webPlayer.repeatMode() === 'one') {
+              <span
+                class="absolute text-[10px] md:text-[11px] font-black top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                >1</span
+              >
+            }
+            <div
+              class="absolute -bottom-2 w-1.5 h-1.5 bg-white rounded-full transition-opacity shadow-[0_0_8px_rgba(255,255,255,0.5)]"
+              [class.opacity-100]="webPlayer.repeatMode() !== 'none'"
+              [class.opacity-0]="webPlayer.repeatMode() === 'none'"
+            ></div>
+          </button>
+        </div>
 
-        <button
-          (click)="webPlayer.togglePlay()"
-          class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all shadow-xl bg-white text-black"
-          [attr.aria-label]="(webPlayer.isPlaying() ? 'player.pause' : 'player.play') | translate"
-          data-testid="player-play-pause"
-        >
-          <ng-icon
-            [name]="webPlayer.isPlaying() ? 'heroPause' : 'heroPlay'"
-            class="text-5xl"
-          ></ng-icon>
-        </button>
+        <div class="flex items-center justify-center gap-8 md:gap-12">
+          <button
+            (click)="webPlayer.previousTrack()"
+            [disabled]="disablePreviousTrack()"
+            class="transition-all active:scale-90 text-white/80 hover:text-white disabled:opacity-30 disabled:pointer-events-none"
+            [attr.aria-label]="'player.prev' | translate"
+            data-testid="player-prev"
+          >
+            <ng-icon name="heroBackward" class="text-4xl"></ng-icon>
+          </button>
 
-        <button
-          (click)="webPlayer.nextTrack()"
-          [disabled]="disableNextTrack()"
-          class="transition-all active:scale-90 text-white/80 hover:text-white disabled:opacity-30 disabled:pointer-events-none"
-          [attr.aria-label]="'player.next' | translate"
-          data-testid="player-next"
-        >
-          <ng-icon name="heroForward" class="text-4xl"></ng-icon>
-        </button>
+          <button
+            (click)="webPlayer.togglePlay()"
+            class="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full hover:scale-110 active:scale-95 transition-all shadow-xl bg-white text-black"
+            [attr.aria-label]="(webPlayer.isPlaying() ? 'player.pause' : 'player.play') | translate"
+            data-testid="player-play-pause"
+          >
+            <ng-icon
+              [name]="webPlayer.isPlaying() ? 'heroPause' : 'heroPlay'"
+              class="text-5xl"
+            ></ng-icon>
+          </button>
+
+          <button
+            (click)="webPlayer.nextTrack()"
+            [disabled]="disableNextTrack()"
+            class="transition-all active:scale-90 text-white/80 hover:text-white disabled:opacity-30 disabled:pointer-events-none"
+            [attr.aria-label]="'player.next' | translate"
+            data-testid="player-next"
+          >
+            <ng-icon name="heroForward" class="text-4xl"></ng-icon>
+          </button>
+        </div>
+
+        <div class="flex"></div>
       </div>
 
       <!-- Volume Row -->

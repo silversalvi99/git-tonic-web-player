@@ -9,6 +9,7 @@ import {
   heroSpeakerWave,
   heroSpeakerXMark,
   heroChevronDown,
+  heroArrowPath,
 } from '@ng-icons/heroicons/outline';
 import { WebPlayer as PlayerService } from '../../../../services/web-player/web-player';
 import { FormatDurationPipe } from '../../../../pipes/format-duration-pipe';
@@ -27,6 +28,7 @@ import { TranslateModule } from '@ngx-translate/core';
       heroSpeakerWave,
       heroSpeakerXMark,
       heroChevronDown,
+      heroArrowPath,
     }),
   ],
   templateUrl: './expanded-player.html',

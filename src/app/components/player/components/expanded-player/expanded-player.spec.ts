@@ -29,9 +29,11 @@ describe('ExpandedPlayerComponent', () => {
       volume: signal(0.8),
       isSeeking: signal(false),
       queue: signal<Track[]>([]),
+      repeatMode: signal('all'),
       previousTrack: vi.fn(),
       nextTrack: vi.fn(),
       togglePlay: vi.fn(),
+      toggleRepeatMode: vi.fn(),
       seek: vi.fn(),
       setVolume: vi.fn(),
     };
@@ -171,5 +173,13 @@ describe('ExpandedPlayerComponent', () => {
     mockPlayerService.volume.set(0);
     component.toggleMute();
     expect(mockPlayerService.setVolume).toHaveBeenCalledWith(1);
+  });
+
+  it('should toggle repeat mode when repeat button is clicked', () => {
+    const repeatBtn = fixture.nativeElement.querySelector(
+      '[data-testid="player-repeat"]',
+    ) as HTMLButtonElement;
+    repeatBtn.click();
+    expect(mockPlayerService.toggleRepeatMode).toHaveBeenCalled();
   });
 });

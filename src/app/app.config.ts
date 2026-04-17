@@ -4,6 +4,7 @@ import {
   provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection,
+  isDevMode,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
@@ -18,6 +19,7 @@ import {
   UserActivityService,
   withAutoRefreshToken,
 } from 'keycloak-angular';
+import { provideServiceWorker } from '@angular/service-worker';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -51,6 +53,10 @@ export const appConfig: ApplicationConfig = {
       },
       features: [withAutoRefreshToken()],
       providers: [AutoRefreshTokenService, UserActivityService],
+    }),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
 };

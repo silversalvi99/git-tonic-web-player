@@ -10,6 +10,7 @@ import {
   heroSpeakerXMark,
   heroArrowsPointingOut,
   heroChevronUp,
+  heroArrowPath,
 } from '@ng-icons/heroicons/outline';
 import { WebPlayer } from '../../../../services/web-player/web-player';
 import { FormatDurationPipe } from '../../../../pipes/format-duration-pipe';
@@ -29,6 +30,7 @@ import { TranslateModule } from '@ngx-translate/core';
       heroSpeakerXMark,
       heroArrowsPointingOut,
       heroChevronUp,
+      heroArrowPath,
     }),
   ],
   templateUrl: './mini-player.html',

@@ -28,9 +28,11 @@ describe('MiniPlayerComponent', () => {
       duration: signal(120),
       volume: signal(1),
       isSeeking: signal(false),
+      repeatMode: signal('all'),
       previousTrack: vi.fn(),
       nextTrack: vi.fn(),
       togglePlay: vi.fn(),
+      toggleRepeatMode: vi.fn(),
       seek: vi.fn(),
       setVolume: vi.fn(),
     };
@@ -118,5 +120,13 @@ describe('MiniPlayerComponent', () => {
     expect(expandHandle).toBeTruthy();
     expandHandle.click();
     expect(emitSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should toggle repeat mode when repeat button is clicked', () => {
+    const repeatBtn = fixture.nativeElement.querySelector(
+      '[data-testid="player-repeat"]',
+    ) as HTMLButtonElement;
+    repeatBtn.click();
+    expect(mockPlayerService.toggleRepeatMode).toHaveBeenCalled();
   });
 });

@@ -19,6 +19,13 @@ describe('WebPlayer', () => {
     streamUrl: 'test-stream',
   };
 
+  const mockMediaSession = {
+    metadata: null,
+    playbackState: 'none',
+    setActionHandler: vi.fn(),
+    setPositionState: vi.fn(),
+  };
+
   beforeEach(() => {
     // Ensure we have a fresh mock for each test
     mockAudio = {
@@ -40,6 +47,23 @@ describe('WebPlayer', () => {
       }),
     );
 
+    vi.stubGlobal(
+      'MediaMetadata',
+      class {
+        constructor(init: any) {
+          Object.assign(this, init);
+        }
+      },
+    );
+
+    if (!navigator.mediaSession) {
+      Object.defineProperty(navigator, 'mediaSession', {
+        value: mockMediaSession,
+        writable: true,
+        configurable: true,
+      });
+    }
+
     TestBed.configureTestingModule({
       providers: [provideZonelessChangeDetection()],
     });
@@ -50,12 +74,15 @@ describe('WebPlayer', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should play a track', () => {
+  it('should play a track and update media session', () => {
     service.playTrack(mockTrack);
     expect(service.currentTrack()).toEqual(mockTrack);
     expect(mockAudio.src).toBe(mockTrack.streamUrl);
     expect(mockAudio.play).toHaveBeenCalled();
     expect(service.isPlaying()).toBe(true);
+    expect(mockMediaSession.metadata).toBeTruthy();
+    expect((mockMediaSession.metadata as any).title).toBe(mockTrack.title);
+    expect(mockMediaSession.playbackState).toBe('playing');
   });
 
   it('should toggle play/pause', () => {
@@ -114,5 +141,76 @@ describe('WebPlayer', () => {
     // Manual trigger if we wanted to test the input/change logic
     service.isSeeking.set(true);
     expect(service.isSeeking()).toBe(true);
+  });
+
+  describe('Repeat Mode', () => {
+    it('should toggle repeat mode correctly', () => {
+      expect(service.repeatMode()).toBe('none');
+      service.toggleRepeatMode();
+      expect(service.repeatMode()).toBe('all');
+      service.toggleRepeatMode();
+      expect(service.repeatMode()).toBe('one');
+      service.toggleRepeatMode();
+      expect(service.repeatMode()).toBe('none');
+    });
+
+    it('should stop at the end of the queue if repeat mode is none', () => {
+      const tracks: Track[] = [mockTrack, { ...mockTrack, id: '2' }];
+      service.queue.set(tracks);
+      service.currentTrack.set(tracks[1]);
+      service.repeatMode.set('none');
+      service.isPlaying.set(true);
+
+      service.nextTrack();
+
+      expect(service.isPlaying()).toBe(false);
+      expect(mockAudio.pause).toHaveBeenCalled();
+    });
+
+    it('should loop to start if repeat mode is all', () => {
+      const tracks: Track[] = [mockTrack, { ...mockTrack, id: '2' }];
+      service.queue.set(tracks);
+      service.currentTrack.set(tracks[1]);
+      service.repeatMode.set('all');
+
+      service.nextTrack();
+
+      expect(service.currentTrack()?.id).toBe('1');
+    });
+
+    it('should replay current track on ended if repeat mode is one', () => {
+      service.currentTrack.set(mockTrack);
+      service.repeatMode.set('one');
+      service.setVolume(1); // Force lazy init
+      const playSpy = vi.spyOn(service, 'playTrack');
+
+      // Manual call to simulated onended
+      mockAudio.onended();
+
+      expect(playSpy).toHaveBeenCalledWith(mockTrack);
+    });
+
+    it('should pause playback on ended if repeat mode is none', () => {
+      service.currentTrack.set(mockTrack);
+      service.repeatMode.set('none');
+      service.setVolume(1); // Force lazy init
+
+      mockAudio.onended();
+
+      expect(mockAudio.pause).toHaveBeenCalled();
+    });
+
+    it('should play next track on ended if repeat mode is all', () => {
+      const tracks: Track[] = [mockTrack, { ...mockTrack, id: '2' }];
+      service.queue.set(tracks);
+      service.currentTrack.set(tracks[0]);
+      service.repeatMode.set('all');
+      service.setVolume(1); // Force lazy init
+      const nextSpy = vi.spyOn(service, 'nextTrack');
+
+      mockAudio.onended();
+
+      expect(nextSpy).toHaveBeenCalled();
+    });
   });
 });
