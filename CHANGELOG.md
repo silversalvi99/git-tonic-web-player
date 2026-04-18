@@ -1,3 +1,9 @@
+## [1.4.6](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.4.5...v1.4.6) (2026-04-18)
+
+### Bug Fixes
+
+- **pwa:** android previous version alert ([8d6299b](https://github.com/silversalvi99/git-tonic-web-player/commit/8d6299b2dc94a5d22dea6ae9d8d582c93aaade6b))
+
 ## [1.4.5](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.4.4...v1.4.5) (2026-04-18)
 
 ### Bug Fixes
