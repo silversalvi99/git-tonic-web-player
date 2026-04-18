@@ -1,3 +1,9 @@
+## [1.4.2](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.4.1...v1.4.2) (2026-04-18)
+
+### Bug Fixes
+
+- **app:** webmanifest in nginx file ([26bd2aa](https://github.com/silversalvi99/git-tonic-web-player/commit/26bd2aabfcf760d88c6b1be905525e288cc4ff02))
+
 ## [1.4.1](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.4.0...v1.4.1) (2026-04-18)
 
 ### Bug Fixes
