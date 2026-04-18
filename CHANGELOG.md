@@ -1,3 +1,9 @@
+## [1.4.4](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.4.3...v1.4.4) (2026-04-18)
+
+### Bug Fixes
+
+- **pwa:** relative icon path in webmanifest ([909e04c](https://github.com/silversalvi99/git-tonic-web-player/commit/909e04cdf8cfa4948512c715f19f181f19ffa221))
+
 ## [1.4.3](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.4.2...v1.4.3) (2026-04-18)
 
 ### Bug Fixes
