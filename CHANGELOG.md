@@ -1,3 +1,9 @@
+## [1.4.3](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.4.2...v1.4.3) (2026-04-18)
+
+### Bug Fixes
+
+- **pwa:** files path in index html ([e06ed9b](https://github.com/silversalvi99/git-tonic-web-player/commit/e06ed9b1f66bcb11b56725d14a0bf9d1b35253bf))
+
 ## [1.4.2](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.4.1...v1.4.2) (2026-04-18)
 
 ### Bug Fixes
