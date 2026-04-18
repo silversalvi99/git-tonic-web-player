@@ -1,3 +1,9 @@
+## [1.4.1](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.4.0...v1.4.1) (2026-04-18)
+
+### Bug Fixes
+
+- **app:** queue media session caching, webmanifest and ci/cd ([633e0ee](https://github.com/silversalvi99/git-tonic-web-player/commit/633e0eeceabfaddc48cfff40cbd7c3e72fdd20b2))
+
 # [1.4.0](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.3.1...v1.4.0) (2026-04-17)
 
 ### Features
