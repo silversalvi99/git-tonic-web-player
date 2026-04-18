@@ -1,3 +1,9 @@
+## [1.4.5](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.4.4...v1.4.5) (2026-04-18)
+
+### Bug Fixes
+
+- **pwa:** icon path for assets folder ([bfa1fa9](https://github.com/silversalvi99/git-tonic-web-player/commit/bfa1fa9022872b4afbdfe2b2505f78d0ab749e0a))
+
 ## [1.4.4](https://github.com/silversalvi99/git-tonic-web-player/compare/v1.4.3...v1.4.4) (2026-04-18)
 
 ### Bug Fixes
