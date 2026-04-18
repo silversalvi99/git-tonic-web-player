@@ -1,24 +1,41 @@
 {
+  "id": "ng-tonic-web-player-v1",
   "name": "Ng Tonic Web Player",
   "short_name": "Ng Player",
+  "categories": ["music"],
   "start_url": "/player/",
   "scope": "/player/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
     },
     {
       "src": "web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "web-app-manifest-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "theme_color": "#000000",
-  "background_color": "#000000",
-  "display": "standalone"
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  }
 }
-
