@@ -58,6 +58,6 @@ export class ThemeManagerComponent {
     // Remove transition class after animation finishes
     setTimeout(() => {
       this.renderer.removeClass(body, 'theme-transitioning');
-    }, 500);
+    }, 1000);
   }
 }

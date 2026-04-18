@@ -35,8 +35,8 @@ setup('authenticate', async ({ page }) => {
   // 5. Wait for redirect back to the app
   await page.waitForURL('/home');
 
-  // 6. Verify we are logged in (e.g. check for a specific element like sidebar)
-  await expect(page.locator('app-sidebar')).toBeVisible({ timeout: 15000 });
+  // 6. Verify we are logged in (check for main content area, always present regardless of viewport)
+  await expect(page.locator('main').first()).toBeVisible({ timeout: 15000 });
 
   // 7. Save storage state
   await page.context().storageState({ path: authFile });

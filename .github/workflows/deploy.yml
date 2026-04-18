@@ -48,14 +48,12 @@ jobs:
         env:
           PRIVATE_CONFIG: ${{ secrets.NAVIDROME_CONFIG_JSON }}
         run: |
-          # Trova la cartella di output (es. dist/project-name/browser)
           TARGET_DIR=$(find dist -name "index.html" -exec dirname {} \;)
           echo "Found target dir: $TARGET_DIR"
 
           mkdir -p "$TARGET_DIR/assets"
           echo "$PRIVATE_CONFIG" > "$TARGET_DIR/assets/config.json"
 
-          # Genera env.js usando envsubst per configurare Keycloak
           envsubst < src/assets/env.template.js > "$TARGET_DIR/assets/env.js"
 
           if [ -f "$TARGET_DIR/assets/config.json" ] && [ -f "$TARGET_DIR/assets/env.js" ]; then

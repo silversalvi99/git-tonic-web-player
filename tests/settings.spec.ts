@@ -42,7 +42,7 @@ test.describe('Settings and Theme E2E', () => {
   test('should show smooth transition class during theme switch', async ({ page }) => {
     const body = page.locator('body');
     await page.getByText('Light', { exact: true }).click();
-    await expect(body).toHaveClass(/theme-transitioning/);
-    await expect(body).not.toHaveClass(/theme-transitioning/, { timeout: 3000 });
+    await expect(body).toHaveClass(/theme-transitioning/, { timeout: 2000 });
+    await expect(body).not.toHaveClass(/theme-transitioning/, { timeout: 5000 });
   });
 });

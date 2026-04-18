@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, effect } from '@angular/core';
 import { Track } from '../../models/track.model';
 
 export type RepeatMode = 'none' | 'one' | 'all';
@@ -26,7 +26,45 @@ export class WebPlayer {
   /** Repeat mode signal */
   repeatMode = signal<RepeatMode>('none');
 
-  /** Audio element reference */
+  /** Preloaded Media Session Metadata cache */
+  private readonly _mediaMetadataCache = new Map<string, MediaMetadata>();
+
+  constructor() {
+    effect(() => {
+      const currentQueue = this.queue();
+      if (typeof MediaMetadata !== 'undefined') {
+        currentQueue.forEach((track) => {
+          if (!this._mediaMetadataCache.has(track.id)) {
+            if (track.coverThumb) {
+              const img = new Image();
+              img.src = track.coverThumb;
+            }
+            if (track.coverFull) {
+              const imgFull = new Image();
+              imgFull.src = track.coverFull;
+            }
+            this._mediaMetadataCache.set(
+              track.id,
+              new MediaMetadata({
+                title: track.title,
+                artist: track.artist,
+                album: track.album,
+                artwork: [
+                  { src: track.coverThumb, sizes: '96x96', type: 'image/png' },
+                  { src: track.coverThumb, sizes: '128x128', type: 'image/png' },
+                  { src: track.coverThumb, sizes: '192x192', type: 'image/png' },
+                  { src: track.coverThumb, sizes: '256x256', type: 'image/png' },
+                  { src: track.coverFull, sizes: '384x384', type: 'image/png' },
+                  { src: track.coverFull, sizes: '512x512', type: 'image/png' },
+                ],
+              }),
+            );
+          }
+        });
+      }
+    });
+  }
+
   /** Audio element reference */
   private _audio?: HTMLAudioElement;
 
@@ -232,19 +270,23 @@ export class WebPlayer {
   private updateMediaMetadata(track: Track): void {
     if (!('mediaSession' in navigator) || typeof MediaMetadata === 'undefined') return;
 
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: track.title,
-      artist: track.artist,
-      album: track.album,
-      artwork: [
-        { src: track.coverThumb, sizes: '96x96', type: 'image/png' },
-        { src: track.coverThumb, sizes: '128x128', type: 'image/png' },
-        { src: track.coverThumb, sizes: '192x192', type: 'image/png' },
-        { src: track.coverThumb, sizes: '256x256', type: 'image/png' },
-        { src: track.coverFull, sizes: '384x384', type: 'image/png' },
-        { src: track.coverFull, sizes: '512x512', type: 'image/png' },
-      ],
-    });
+    if (this._mediaMetadataCache.has(track.id)) {
+      navigator.mediaSession.metadata = this._mediaMetadataCache.get(track.id)!;
+    } else {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: track.title,
+        artist: track.artist,
+        album: track.album,
+        artwork: [
+          { src: track.coverThumb, sizes: '96x96', type: 'image/png' },
+          { src: track.coverThumb, sizes: '128x128', type: 'image/png' },
+          { src: track.coverThumb, sizes: '192x192', type: 'image/png' },
+          { src: track.coverThumb, sizes: '256x256', type: 'image/png' },
+          { src: track.coverFull, sizes: '384x384', type: 'image/png' },
+          { src: track.coverFull, sizes: '512x512', type: 'image/png' },
+        ],
+      });
+    }
   }
 
   /**

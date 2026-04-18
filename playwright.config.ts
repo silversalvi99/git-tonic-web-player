@@ -8,6 +8,7 @@ dotenv.config({ path: path.resolve(import.meta.dirname, '.env') });
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
+  workers: '100%',
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: process.env.CI ? 'github' : 'html',
